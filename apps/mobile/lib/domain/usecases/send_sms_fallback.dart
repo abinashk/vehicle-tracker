@@ -4,6 +4,7 @@ import 'package:shared/shared.dart';
 import '../../core/services/connectivity_service.dart';
 import '../../core/services/sms_service.dart';
 import '../../data/local/daos/passage_dao.dart';
+import '../../data/local/database.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/sync_repository.dart';
 
