@@ -6,12 +6,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:vehicle_tracker_web/data/repositories/ranger_repository.dart';
 
-@GenerateMocks([
-  SupabaseClient,
-  SupabaseQueryBuilder,
-  PostgrestFilterBuilder,
-  PostgrestTransformBuilder,
-  FunctionsClient,
+@GenerateNiceMocks([
+  MockSpec<SupabaseClient>(),
+  MockSpec<SupabaseQueryBuilder>(),
+  MockSpec<PostgrestFilterBuilder<dynamic>>(),
+  MockSpec<PostgrestTransformBuilder<dynamic>>(),
+  MockSpec<FunctionsClient>(),
 ])
 import 'ranger_repository_test.mocks.dart';
 

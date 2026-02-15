@@ -11,17 +11,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Supabase.
-  // In production, these values come from environment variables or
-  // build-time configuration. For local development, update these.
+  // These values MUST be provided via --dart-define at build time.
+  // No defaults — the app will throw at startup if they're missing.
+  const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+  const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+  assert(supabaseUrl.isNotEmpty, 'SUPABASE_URL must be set via --dart-define');
+  assert(supabaseAnonKey.isNotEmpty, 'SUPABASE_ANON_KEY must be set via --dart-define');
+
   await Supabase.initialize(
-    url: const String.fromEnvironment(
-      'SUPABASE_URL',
-      defaultValue: 'http://localhost:54321',
-    ),
-    anonKey: const String.fromEnvironment(
-      'SUPABASE_ANON_KEY',
-      defaultValue: '',
-    ),
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
   );
 
   runApp(

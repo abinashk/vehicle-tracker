@@ -2,15 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared/shared.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 
 import 'package:vehicle_tracker_web/data/repositories/auth_repository.dart';
 
-@GenerateMocks([
-  SupabaseClient,
-  GoTrueClient,
-  SupabaseQueryBuilder,
-  PostgrestFilterBuilder
+@GenerateNiceMocks([
+  MockSpec<SupabaseClient>(),
+  MockSpec<GoTrueClient>(),
+  MockSpec<SupabaseQueryBuilder>(),
+  MockSpec<PostgrestFilterBuilder<dynamic>>(),
 ])
 import 'auth_repository_test.mocks.dart';
 

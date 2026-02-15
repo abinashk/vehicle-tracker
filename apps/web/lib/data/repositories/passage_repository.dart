@@ -1,6 +1,15 @@
 import 'package:shared/shared.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Escape special characters for Postgres ILIKE patterns.
+/// Prevents SQL injection via %, _, and \ characters in user input.
+String _sanitizeLikePattern(String input) {
+  return input
+      .replaceAll(r'\', r'\\')
+      .replaceAll('%', r'\%')
+      .replaceAll('_', r'\_');
+}
+
 /// Filter parameters for passage queries.
 class PassageFilter {
   final DateTime? dateFrom;
@@ -117,7 +126,7 @@ class PassageRepository {
       query = query.eq('vehicle_type', filter.vehicleType!.value);
     }
     if (filter.plateSearch != null && filter.plateSearch!.isNotEmpty) {
-      query = query.ilike('plate_number', '%${filter.plateSearch}%');
+      query = query.ilike('plate_number', '%${_sanitizeLikePattern(filter.plateSearch!)}%');
     }
     if (filter.source != null) {
       query = query.eq('source', filter.source!);
@@ -185,7 +194,7 @@ class PassageRepository {
       query = query.eq('vehicle_type', filter.vehicleType!.value);
     }
     if (filter.plateSearch != null && filter.plateSearch!.isNotEmpty) {
-      query = query.ilike('plate_number', '%${filter.plateSearch}%');
+      query = query.ilike('plate_number', '%${_sanitizeLikePattern(filter.plateSearch!)}%');
     }
     if (filter.source != null) {
       query = query.eq('source', filter.source!);

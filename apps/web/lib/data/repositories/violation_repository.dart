@@ -1,6 +1,14 @@
 import 'package:shared/shared.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Escape special characters for Postgres ILIKE patterns.
+String _sanitizeLikePattern(String input) {
+  return input
+      .replaceAll(r'\', r'\\')
+      .replaceAll('%', r'\%')
+      .replaceAll('_', r'\_');
+}
+
 /// Filter parameters for violation queries.
 class ViolationFilter {
   final ViolationType? violationType;
@@ -269,7 +277,7 @@ class ViolationRepository {
       query = query.lte('created_at', filter.dateTo!.toUtc().toIso8601String());
     }
     if (filter.plateSearch != null && filter.plateSearch!.isNotEmpty) {
-      query = query.ilike('plate_number', '%${filter.plateSearch}%');
+      query = query.ilike('plate_number', '%${_sanitizeLikePattern(filter.plateSearch!)}%');
     }
     return query;
   }
@@ -307,7 +315,7 @@ class ViolationRepository {
       query = query.lte('created_at', filter.dateTo!.toUtc().toIso8601String());
     }
     if (filter.plateSearch != null && filter.plateSearch!.isNotEmpty) {
-      query = query.ilike('plate_number', '%${filter.plateSearch}%');
+      query = query.ilike('plate_number', '%${_sanitizeLikePattern(filter.plateSearch!)}%');
     }
 
     final response = await query.count(CountOption.exact);
