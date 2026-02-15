@@ -38,7 +38,7 @@ class _RangerListScreenState extends ConsumerState<RangerListScreen> {
       final rangerRepo = ref.read(rangerRepositoryProvider);
       final segmentRepo = ref.read(segmentRepositoryProvider);
 
-      final results = await Future.wait([
+      final results = await Future.wait<Object>([
         rangerRepo.listRangers(),
         segmentRepo.listCheckposts(),
       ]);

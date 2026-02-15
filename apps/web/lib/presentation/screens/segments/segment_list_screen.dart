@@ -35,7 +35,7 @@ class _SegmentListScreenState extends ConsumerState<SegmentListScreen> {
     try {
       final segmentRepo = ref.read(segmentRepositoryProvider);
 
-      final results = await Future.wait([
+      final results = await Future.wait<Object>([
         segmentRepo.listSegments(),
         segmentRepo.listCheckposts(),
       ]);

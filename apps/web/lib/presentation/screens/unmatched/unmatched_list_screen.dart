@@ -41,7 +41,7 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
       final alertRepo = ref.read(alertRepositoryProvider);
       final segmentRepo = ref.read(segmentRepositoryProvider);
 
-      final results = await Future.wait([
+      final results = await Future.wait<Object>([
         alertRepo.getUnmatchedEntries(),
         segmentRepo.listCheckposts(),
       ]);

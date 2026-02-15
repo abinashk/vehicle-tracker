@@ -99,7 +99,7 @@ class PassageRepository {
 
     var query = _client
         .from(ApiConstants.vehiclePassagesTable)
-        .select('*', const FetchOptions(count: CountOption.exact));
+        .select();
 
     // Apply filters.
     if (filter.dateFrom != null) {
@@ -168,7 +168,7 @@ class PassageRepository {
   Future<int> _getFilteredCount(String table, PassageFilter filter) async {
     var query = _client
         .from(table)
-        .select('id', const FetchOptions(count: CountOption.exact, head: true));
+        .select('id');
 
     if (filter.dateFrom != null) {
       query =

@@ -136,16 +136,14 @@ class DashboardRepository {
 
       final passageCount = await _client
           .from(ApiConstants.vehiclePassagesTable)
-          .select(
-              'id', const FetchOptions(count: CountOption.exact, head: true))
+          .select('id')
           .gte('recorded_at', dayStart.toIso8601String())
           .lt('recorded_at', dayEnd.toIso8601String())
           .count(CountOption.exact);
 
       final violationCount = await _client
           .from(ApiConstants.violationsTable)
-          .select(
-              'id', const FetchOptions(count: CountOption.exact, head: true))
+          .select('id')
           .gte('created_at', dayStart.toIso8601String())
           .lt('created_at', dayEnd.toIso8601String())
           .count(CountOption.exact);
@@ -239,7 +237,7 @@ class DashboardRepository {
   Future<int> _countPassagesToday(DateTime start, DateTime end) async {
     final response = await _client
         .from(ApiConstants.vehiclePassagesTable)
-        .select('id', const FetchOptions(count: CountOption.exact, head: true))
+        .select('id')
         .gte('recorded_at', start.toIso8601String())
         .lt('recorded_at', end.toIso8601String())
         .count(CountOption.exact);
@@ -254,7 +252,7 @@ class DashboardRepository {
   ) async {
     final response = await _client
         .from(ApiConstants.violationsTable)
-        .select('id', const FetchOptions(count: CountOption.exact, head: true))
+        .select('id')
         .eq('violation_type', type.value)
         .gte('created_at', start.toIso8601String())
         .lt('created_at', end.toIso8601String())
@@ -266,7 +264,7 @@ class DashboardRepository {
   Future<int> _countUnmatched() async {
     final response = await _client
         .from(ApiConstants.vehiclePassagesTable)
-        .select('id', const FetchOptions(count: CountOption.exact, head: true))
+        .select('id')
         .isFilter('matched_passage_id', null)
         .count(CountOption.exact);
 
@@ -276,7 +274,7 @@ class DashboardRepository {
   Future<int> _countActiveAlerts() async {
     final response = await _client
         .from(ApiConstants.proactiveOverstayAlertsTable)
-        .select('id', const FetchOptions(count: CountOption.exact, head: true))
+        .select('id')
         .eq('is_resolved', false)
         .count(CountOption.exact);
 

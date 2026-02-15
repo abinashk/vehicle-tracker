@@ -62,7 +62,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     try {
       final dashboardRepo = ref.read(dashboardRepositoryProvider);
 
-      final results = await Future.wait([
+      final results = await Future.wait<Object>([
         dashboardRepo.getTodaySummary(),
         dashboardRepo.getLast7DaysCounts(),
         dashboardRepo.getActiveAlerts(),

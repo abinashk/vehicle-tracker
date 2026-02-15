@@ -6,7 +6,9 @@ class AppTheme {
 
   // Brand colors
   static const Color _primaryColor = Color(0xFF1B5E20);
+  // ignore: unused_field
   static const Color _primaryLight = Color(0xFF4C8C4A);
+  // ignore: unused_field
   static const Color _primaryDark = Color(0xFF003300);
   static const Color _secondaryColor = Color(0xFF00695C);
   static const Color _errorColor = Color(0xFFD32F2F);

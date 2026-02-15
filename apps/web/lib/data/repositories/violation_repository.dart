@@ -254,8 +254,8 @@ class ViolationRepository {
   // Private helpers
   // ---------------------------------------------------------------------------
 
-  PostgrestFilterBuilder _applyViolationFilters(
-    PostgrestFilterBuilder query,
+  PostgrestFilterBuilder<List<Map<String, dynamic>>> _applyViolationFilters(
+    PostgrestFilterBuilder<List<Map<String, dynamic>>> query,
     ViolationFilter filter,
   ) {
     if (filter.violationType != null) {
@@ -294,7 +294,7 @@ class ViolationRepository {
   Future<int> _getViolationCount(ViolationFilter filter) async {
     var query = _client
         .from(ApiConstants.violationsTable)
-        .select('id', const FetchOptions(count: CountOption.exact, head: true));
+        .select('id');
 
     if (filter.violationType != null) {
       query = query.eq('violation_type', filter.violationType!.value);
