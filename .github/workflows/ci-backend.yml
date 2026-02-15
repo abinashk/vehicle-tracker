@@ -22,7 +22,7 @@ jobs:
           version: latest
 
       - name: Start Supabase
-        run: supabase start -x realtime,storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+        run: supabase start -x realtime,storage-api,imgproxy,mailpit,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
 
       - name: Validate migrations
         run: supabase db reset

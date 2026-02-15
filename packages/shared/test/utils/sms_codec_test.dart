@@ -100,8 +100,7 @@ void main() {
 
     test('should decode all vehicle type codes', () {
       for (final type in VehicleType.values) {
-        final encoded =
-            'V1|X|A1B2|${type.smsCode}|1000000|0';
+        final encoded = 'V1|X|A1B2|${type.smsCode}|1000000|0';
         final decoded = SmsDecoder.decode(encoded);
         expect(decoded.vehicleType, equals(type));
       }

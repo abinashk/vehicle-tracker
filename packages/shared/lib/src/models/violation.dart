@@ -44,18 +44,14 @@ class Violation {
       entryPassageId: json['entry_passage_id'] as String,
       exitPassageId: json['exit_passage_id'] as String,
       segmentId: json['segment_id'] as String,
-      violationType:
-          ViolationType.fromValue(json['violation_type'] as String),
+      violationType: ViolationType.fromValue(json['violation_type'] as String),
       plateNumber: json['plate_number'] as String,
       vehicleType: VehicleType.fromValue(json['vehicle_type'] as String),
       entryTime: DateTime.parse(json['entry_time'] as String),
       exitTime: DateTime.parse(json['exit_time'] as String),
-      travelTimeMinutes:
-          (json['travel_time_minutes'] as num).toDouble(),
-      thresholdMinutes:
-          (json['threshold_minutes'] as num).toDouble(),
-      calculatedSpeedKmh:
-          (json['calculated_speed_kmh'] as num).toDouble(),
+      travelTimeMinutes: (json['travel_time_minutes'] as num).toDouble(),
+      thresholdMinutes: (json['threshold_minutes'] as num).toDouble(),
+      calculatedSpeedKmh: (json['calculated_speed_kmh'] as num).toDouble(),
       speedLimitKmh: (json['speed_limit_kmh'] as num).toDouble(),
       distanceKm: (json['distance_km'] as num).toDouble(),
       alertDeliveredAt: json['alert_delivered_at'] != null
@@ -97,9 +93,7 @@ class Violation {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Violation &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
+      other is Violation && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;

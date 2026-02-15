@@ -83,10 +83,8 @@ class HighwaySegment {
       distanceKm: distanceKm ?? this.distanceKm,
       maxSpeedKmh: maxSpeedKmh ?? this.maxSpeedKmh,
       minSpeedKmh: minSpeedKmh ?? this.minSpeedKmh,
-      minTravelTimeMinutes:
-          minTravelTimeMinutes ?? this.minTravelTimeMinutes,
-      maxTravelTimeMinutes:
-          maxTravelTimeMinutes ?? this.maxTravelTimeMinutes,
+      minTravelTimeMinutes: minTravelTimeMinutes ?? this.minTravelTimeMinutes,
+      maxTravelTimeMinutes: maxTravelTimeMinutes ?? this.maxTravelTimeMinutes,
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

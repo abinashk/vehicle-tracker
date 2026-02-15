@@ -32,8 +32,7 @@ class SmsEncoder {
   /// exceeds the 160-character SMS limit.
   static String encode(PassageSmsData data) {
     final compactPlate = PlateNormalizer.compact(data.plateNumber);
-    final epochSeconds =
-        data.recordedAt.toUtc().millisecondsSinceEpoch ~/ 1000;
+    final epochSeconds = data.recordedAt.toUtc().millisecondsSinceEpoch ~/ 1000;
 
     final parts = [
       SmsFormat.version,

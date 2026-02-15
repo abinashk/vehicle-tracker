@@ -69,6 +69,5 @@ class ViolationOutcome {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'ViolationOutcome(id: $id, type: ${outcomeType.value})';
+  String toString() => 'ViolationOutcome(id: $id, type: ${outcomeType.value})';
 }

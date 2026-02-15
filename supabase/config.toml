@@ -1,9 +1,6 @@
 # Supabase project configuration for Vehicle Tracker
 # See: https://supabase.com/docs/guides/cli/config
 
-[project]
-id = "vehicle-tracker"
-
 [api]
 enabled = true
 port = 54321
