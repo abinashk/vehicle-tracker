@@ -36,7 +36,6 @@ class _RangerFormScreenState extends ConsumerState<RangerFormScreen> {
 
   List<Checkpost> _checkposts = [];
   List<Park> _parks = [];
-  UserProfile? _existingRanger;
 
   bool _isLoading = false;
   bool _isInitialLoading = true;
@@ -67,7 +66,6 @@ class _RangerFormScreenState extends ConsumerState<RangerFormScreen> {
         final rangerRepo = ref.read(rangerRepositoryProvider);
         final ranger = await rangerRepo.getRanger(widget.rangerId!);
 
-        _existingRanger = ranger;
         _fullNameController.text = ranger.fullName;
         _phoneController.text = ranger.phoneNumber ?? '';
         _selectedCheckpostId = ranger.assignedCheckpostId;
