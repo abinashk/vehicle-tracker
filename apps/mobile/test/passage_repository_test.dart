@@ -1,9 +1,10 @@
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' hide isNotNull;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared/shared.dart';
 
+import 'package:vehicle_tracker_mobile/data/local/database.dart';
 import 'package:vehicle_tracker_mobile/data/local/daos/passage_dao.dart';
 import 'package:vehicle_tracker_mobile/data/local/daos/sync_queue_dao.dart';
 import 'package:vehicle_tracker_mobile/data/remote/passage_remote_source.dart';

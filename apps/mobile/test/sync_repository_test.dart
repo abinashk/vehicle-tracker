@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:shared/shared.dart';
 
 import 'package:vehicle_tracker_mobile/core/services/connectivity_service.dart';
 import 'package:vehicle_tracker_mobile/data/local/daos/cached_passage_dao.dart';
