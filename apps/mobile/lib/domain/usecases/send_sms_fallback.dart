@@ -4,9 +4,7 @@ import 'package:shared/shared.dart';
 import '../../core/services/connectivity_service.dart';
 import '../../core/services/sms_service.dart';
 import '../../data/local/daos/passage_dao.dart';
-import '../../data/local/database.dart';
 import '../../data/repositories/auth_repository.dart';
-import '../../data/repositories/passage_repository.dart';
 import '../../data/repositories/sync_repository.dart';
 
 /// Use case: Send SMS fallback for passages that cannot be synced.
@@ -20,24 +18,31 @@ import '../../data/repositories/sync_repository.dart';
 class SendSmsFallbackUseCase {
   SendSmsFallbackUseCase({
     required SyncRepository syncRepository,
-    required PassageRepository passageRepository,
     required PassageDao passageDao,
     required SmsService smsService,
     required ConnectivityService connectivityService,
     required AuthRepository authRepository,
   })  : _syncRepository = syncRepository,
-        _passageRepository = passageRepository,
         _passageDao = passageDao,
         _smsService = smsService,
         _connectivityService = connectivityService,
         _authRepository = authRepository;
 
   final SyncRepository _syncRepository;
-  final PassageRepository _passageRepository;
   final PassageDao _passageDao;
   final SmsService _smsService;
   final ConnectivityService _connectivityService;
   final AuthRepository _authRepository;
+
+  /// Locally cached checkpost code, set by [configure].
+  /// This avoids a remote query when offline.
+  String? _checkpostCode;
+
+  /// Configure with locally known checkpost code.
+  /// Must be called before [execute] (typically during sync engine startup).
+  void configure({required String checkpostCode}) {
+    _checkpostCode = checkpostCode;
+  }
 
   /// Check and send SMS fallback for eligible items.
   ///
@@ -49,12 +54,8 @@ class SendSmsFallbackUseCase {
     final profile = _authRepository.currentProfile;
     if (profile == null) return 0;
 
-    final checkpostId = profile.assignedCheckpostId;
-    if (checkpostId == null) return 0;
-
-    // Get the checkpost code for SMS encoding.
-    final checkpost = await _passageRepository.getCheckpost(checkpostId);
-    if (checkpost == null) return 0;
+    // Use locally cached checkpost code (avoids remote query while offline).
+    if (_checkpostCode == null) return 0;
 
     // Get the ranger's phone suffix (last 4 digits).
     final phoneSuffix = _extractPhoneSuffix(profile.phoneNumber);
@@ -80,7 +81,7 @@ class SendSmsFallbackUseCase {
 
       // Send the SMS.
       final success = await _smsService.sendPassageSms(
-        checkpostCode: checkpost.code,
+        checkpostCode: _checkpostCode!,
         plateNumber: passage.plateNumber,
         vehicleType: VehicleType.fromValue(passage.vehicleType),
         recordedAt: passage.recordedAt,
@@ -109,7 +110,6 @@ class SendSmsFallbackUseCase {
 final sendSmsFallbackUseCaseProvider = Provider<SendSmsFallbackUseCase>((ref) {
   return SendSmsFallbackUseCase(
     syncRepository: ref.watch(syncRepositoryProvider),
-    passageRepository: ref.watch(passageRepositoryProvider),
     passageDao: ref.watch(passageDaoProvider),
     smsService: ref.watch(smsServiceProvider),
     connectivityService: ref.watch(connectivityServiceProvider),

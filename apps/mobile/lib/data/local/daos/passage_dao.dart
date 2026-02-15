@@ -102,6 +102,15 @@ class PassageDao extends DatabaseAccessor<AppDatabase> with _$PassageDaoMixin {
         .get();
   }
 
+  /// Get passages with local photos that haven't been uploaded yet.
+  Future<List<LocalPassage>> getPassagesWithPendingPhotos() {
+    return (select(localPassages)
+          ..where(
+              (t) => t.photoLocalPath.isNotNull() & t.photoPath.isNull())
+          ..limit(20))
+        .get();
+  }
+
   /// Get recent passages (last N entries).
   Stream<List<LocalPassage>> watchRecentPassages({int limit = 50}) {
     return (select(localPassages)

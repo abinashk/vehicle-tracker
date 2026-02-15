@@ -7,6 +7,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import 'app.dart';
 import 'core/services/connectivity_service.dart';
 import 'core/services/notification_service.dart';
+import 'domain/usecases/sync_passages.dart';
 
 /// Application entry point.
 ///
@@ -62,6 +63,15 @@ void main() async {
     await container.read(notificationServiceProvider).initialize();
   } catch (_) {
     // Firebase may not be configured in all environments.
+  }
+
+  // Start the sync engine (non-blocking — configures and starts if user
+  // is already authenticated and has an assigned checkpost).
+  try {
+    await container.read(syncPassagesUseCaseProvider).startSync();
+  } catch (_) {
+    // Sync startup may fail if user isn't logged in yet; the home screen
+    // will retry once the user authenticates.
   }
 
   runApp(

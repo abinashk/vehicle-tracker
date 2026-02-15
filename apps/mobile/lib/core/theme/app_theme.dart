@@ -126,7 +126,7 @@ class AppTheme {
         ),
         errorStyle: const TextStyle(
           color: red,
-          fontSize: 14,
+          fontSize: minFontSize,
         ),
       ),
       textTheme: const TextTheme(
@@ -171,7 +171,7 @@ class AppTheme {
           color: textPrimary,
         ),
         bodySmall: TextStyle(
-          fontSize: 14,
+          fontSize: minFontSize,
           fontWeight: FontWeight.w400,
           color: textSecondary,
         ),
@@ -186,7 +186,7 @@ class AppTheme {
           color: textSecondary,
         ),
         labelSmall: TextStyle(
-          fontSize: 14,
+          fontSize: minFontSize,
           fontWeight: FontWeight.w500,
           color: textSecondary,
         ),

@@ -44,7 +44,7 @@ class ConnectivityIndicator extends ConsumerWidget {
             label,
             style: TextStyle(
               color: color,
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
               letterSpacing: 1.0,
             ),

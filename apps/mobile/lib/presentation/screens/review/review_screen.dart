@@ -223,7 +223,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       const Text(
                         'Reading plate...',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           color: AppTheme.textHint,
                         ),
                       ),

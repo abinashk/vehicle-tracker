@@ -278,7 +278,7 @@ class _ViewfinderOverlay extends StatelessWidget {
               'Align license plate here',
               style: TextStyle(
                 color: AppTheme.amber,
-                fontSize: 14,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),

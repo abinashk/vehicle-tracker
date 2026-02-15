@@ -7,6 +7,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/repositories/passage_repository.dart';
 import '../../../data/repositories/violation_repository.dart';
+import '../../../domain/usecases/sync_passages.dart';
 import '../../widgets/connectivity_indicator.dart';
 import '../../widgets/sync_status_bar.dart';
 
@@ -30,11 +31,26 @@ final todaysViolationCountProvider = FutureProvider<int>((ref) async {
 /// - Sync status summary
 /// - Today's stats (recordings, violations)
 /// - Navigation to History
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Ensure sync engine is running when the home screen mounts
+    // (handles fresh login case where main.dart startup had no auth).
+    Future.microtask(() {
+      ref.read(syncPassagesUseCaseProvider).startSync();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
     final passageCount = ref.watch(todaysPassageCountProvider);
     final violationCount = ref.watch(todaysViolationCountProvider);
@@ -202,7 +218,7 @@ class _StatCard extends StatelessWidget {
                 child: Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     color: AppTheme.textSecondary,
                   ),
                 ),

@@ -103,11 +103,22 @@ class SyncRepository {
     _connectivitySubscription = null;
   }
 
-  /// Run a full sync cycle: outbound push then inbound pull.
-  Future<void> _runSyncCycle() async {
-    if (_isSyncing || !_connectivityService.isOnline) return;
-    _isSyncing = true;
+  /// Callback invoked when the device is offline and items are pending.
+  /// Set by the use case layer to trigger SMS fallback.
+  void Function()? onOfflineWithPendingItems;
 
+  /// Run a full sync cycle: outbound push then inbound pull.
+  /// When offline, notifies the SMS fallback trigger instead.
+  Future<void> _runSyncCycle() async {
+    if (_isSyncing) return;
+
+    if (!_connectivityService.isOnline) {
+      // Notify SMS fallback trigger when offline.
+      onOfflineWithPendingItems?.call();
+      return;
+    }
+
+    _isSyncing = true;
     try {
       await _outboundPush();
       await _inboundPull();
@@ -162,7 +173,7 @@ class SyncRepository {
           // 201 = created, 409 = duplicate (both are success).
           await _syncQueueDao.markSynced(item.passageClientId);
         } else {
-          _handlePushFailure(item);
+          await _handlePushFailure(item);
         }
       } catch (_) {
         await _handlePushFailure(item);
@@ -221,9 +232,30 @@ class SyncRepository {
   }
 
   /// Upload photos for synced passages.
+  ///
+  /// Queries passages that have a local photo but no remote path yet,
+  /// then uploads each one. Non-blocking: failures are silently retried
+  /// in the next cycle.
   Future<void> _uploadPendingPhotos() async {
-    // Find recently synced items that have local photos but no remote path.
-    // This is simplified - in production you'd track photo upload state separately.
+    try {
+      final passages = await _passageDao.getPassagesWithPendingPhotos();
+      for (final passage in passages) {
+        if (passage.photoLocalPath == null || passage.photoPath != null) continue;
+        try {
+          final remotePath = await _remoteSource.uploadPhoto(
+            passageId: passage.id,
+            localPath: passage.photoLocalPath!,
+          );
+          if (remotePath != null) {
+            await _passageDao.updatePhotoPath(passage.id, remotePath);
+          }
+        } catch (_) {
+          // Photo upload failure is non-blocking; will retry next cycle.
+        }
+      }
+    } catch (_) {
+      // Query failure is non-blocking.
+    }
   }
 
   /// Upload a specific photo for a passage.

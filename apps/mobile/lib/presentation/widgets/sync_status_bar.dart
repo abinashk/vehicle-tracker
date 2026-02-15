@@ -51,7 +51,7 @@ class SyncStatusBar extends ConsumerWidget {
                       : 'All synced',
                   style: TextStyle(
                     color: hasPending ? AppTheme.amber : AppTheme.textSecondary,
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -59,7 +59,7 @@ class SyncStatusBar extends ConsumerWidget {
                   lastSyncText,
                   style: const TextStyle(
                     color: AppTheme.textHint,
-                    fontSize: 12,
+                    fontSize: 16,
                   ),
                 ),
               ],

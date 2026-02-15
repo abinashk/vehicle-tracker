@@ -210,7 +210,7 @@ class _PassageListItem extends StatelessWidget {
                         Text(
                           passage.vehicleType.label,
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             color: AppTheme.textSecondary,
                           ),
                         ),
@@ -218,7 +218,7 @@ class _PassageListItem extends StatelessWidget {
                         Text(
                           '$dateStr $timeStr',
                           style: const TextStyle(
-                            fontSize: 14,
+                            fontSize: 16,
                             color: AppTheme.textHint,
                           ),
                         ),
@@ -238,7 +238,7 @@ class _PassageListItem extends StatelessWidget {
                 child: Text(
                   statusText,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: statusColor,
                   ),
