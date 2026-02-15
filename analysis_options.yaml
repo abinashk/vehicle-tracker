@@ -1,0 +1,32 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    missing_return: error
+    dead_code: warning
+    unused_import: warning
+    unused_local_variable: warning
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.mocks.dart"
+
+linter:
+  rules:
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_fields
+    - prefer_final_locals
+    - avoid_print
+    - require_trailing_commas
+    - sort_child_properties_last
+    - use_key_in_widget_constructors
+    - prefer_single_quotes
+    - always_declare_return_types
+    - annotate_overrides
+    - avoid_empty_else
+    - avoid_unnecessary_containers
+    - prefer_is_empty
+    - prefer_is_not_empty
+    - unnecessary_const
+    - unnecessary_new
+    - unnecessary_this

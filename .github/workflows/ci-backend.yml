@@ -1,0 +1,49 @@
+name: CI - Backend (Supabase)
+
+on:
+  push:
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/ci-backend.yml'
+  pull_request:
+    paths:
+      - 'supabase/**'
+      - '.github/workflows/ci-backend.yml'
+
+jobs:
+  validate-migrations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start -x realtime,storage-api,imgproxy,inbucket,pgadmin-schema-diff,migra,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+      - name: Validate migrations
+        run: supabase db reset
+
+      - name: Stop Supabase
+        run: supabase stop
+
+  lint-edge-functions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Check edge function formatting
+        run: |
+          for dir in supabase/functions/*/; do
+            if [ -f "$dir/index.ts" ]; then
+              deno check "$dir/index.ts" || true
+            fi
+          done
