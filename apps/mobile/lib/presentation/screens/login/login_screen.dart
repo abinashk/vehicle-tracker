@@ -151,10 +151,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppTheme.red.withValues(alpha: 0.15),
+                        color: AppTheme.red.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                            color: AppTheme.red.withValues(alpha: 0.5)),
+                            color: AppTheme.red.withOpacity(0.5)),
                       ),
                       child: Row(
                         children: [

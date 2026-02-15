@@ -265,7 +265,7 @@ class _ViewfinderOverlay extends StatelessWidget {
         height: 80,
         decoration: BoxDecoration(
           border: Border.all(
-            color: AppTheme.amber.withValues(alpha: 0.7),
+            color: AppTheme.amber.withOpacity(0.7),
             width: 2,
           ),
           borderRadius: BorderRadius.circular(8),

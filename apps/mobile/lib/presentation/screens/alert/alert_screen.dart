@@ -92,7 +92,7 @@ class _AlertScreenState extends ConsumerState<AlertScreen> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 24),
               decoration: BoxDecoration(
-                color: alertColor.withValues(alpha: 0.15),
+                color: alertColor.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: alertColor, width: 2),
               ),

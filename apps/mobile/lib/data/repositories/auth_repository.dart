@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared/shared.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide UserProfile;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../remote/auth_remote_source.dart';
 

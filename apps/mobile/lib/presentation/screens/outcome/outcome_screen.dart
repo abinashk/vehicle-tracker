@@ -133,7 +133,7 @@ class _OutcomeScreenState extends ConsumerState<OutcomeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppTheme.amber.withValues(alpha: 0.15)
+                            ? AppTheme.amber.withOpacity(0.15)
                             : AppTheme.surfaceVariant,
                         borderRadius: BorderRadius.circular(12),
                         border: isSelected

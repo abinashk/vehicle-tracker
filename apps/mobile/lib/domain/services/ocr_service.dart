@@ -32,8 +32,9 @@ class OcrService {
   TextRecognizer get _latin =>
       _latinRecognizer ??= TextRecognizer(script: TextRecognitionScript.latin);
 
-  TextRecognizer get _devanagari => _devanagariRecognizer ??=
-      TextRecognizer(script: TextRecognitionScript.devanagari);
+  // Default recognizer handles multiple scripts including Devanagari.
+  TextRecognizer get _devanagari =>
+      _devanagariRecognizer ??= TextRecognizer();
 
   /// Extract plate number from an image file.
   ///
