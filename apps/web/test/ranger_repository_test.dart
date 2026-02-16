@@ -57,7 +57,8 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.select(any))
+            .thenAnswer((_) => mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq('role', 'ranger'))
             .thenReturn(mockFilterBuilder);
         when((mockFilterBuilder as dynamic).order('full_name', ascending: true))
@@ -83,7 +84,8 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.select(any))
+            .thenAnswer((_) => mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq('id', 'ranger-001'))
             .thenReturn(mockFilterBuilder);
         when((mockFilterBuilder as dynamic).single())
@@ -107,10 +109,12 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.update(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.update(any))
+            .thenAnswer((_) => mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq('id', 'ranger-001'))
             .thenReturn(mockFilterBuilder);
-        when((mockFilterBuilder as dynamic).select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when((mockFilterBuilder as dynamic).select(any))
+            .thenAnswer((_) => mockFilterBuilder as dynamic);
         when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
               ...sampleRangerJson,
               'is_active': false,
