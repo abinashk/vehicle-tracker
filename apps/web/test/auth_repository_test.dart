@@ -56,16 +56,16 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<Map<String, dynamic>>);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
-        when(mockFilterBuilder.single()).thenAnswer((_) async => {
+        when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
               'id': 'user-123',
               'full_name': 'Test Ranger',
               'role': 'ranger',
               'is_active': true,
               'created_at': DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            },);
+            });
 
         when(mockAuth.signOut()).thenAnswer((_) async {});
 
@@ -107,16 +107,16 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<Map<String, dynamic>>);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
-        when(mockFilterBuilder.single()).thenAnswer((_) async => {
+        when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
               'id': 'admin-123',
               'full_name': 'Admin User',
               'role': 'admin',
               'is_active': true,
               'created_at': DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            },);
+            });
 
         // Act
         final profile = await authRepository.signIn(

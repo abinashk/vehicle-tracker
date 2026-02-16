@@ -300,7 +300,7 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
                   DataCell(
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
+                          horizontal: 8, vertical: 2,),
                       decoration: BoxDecoration(
                         color: entry.minutesOverThreshold > 60
                             ? AppTheme.errorColor.withOpacity(0.1)
@@ -326,7 +326,7 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
                       label: const Text('Resolve'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                            horizontal: 12, vertical: 8,),
                         textStyle: const TextStyle(fontSize: 12),
                       ),
                     ),
