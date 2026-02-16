@@ -152,7 +152,7 @@ class DashboardRepository {
         date: date,
         passages: passageCount.count,
         violations: violationCount.count,
-      ));
+      ),);
     }
 
     return counts;

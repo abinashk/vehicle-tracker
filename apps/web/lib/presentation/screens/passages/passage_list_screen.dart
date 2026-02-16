@@ -119,7 +119,7 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
         plateSearch: _filter.plateSearch,
         source: _filter.source,
         isMatched: _filter.isMatched,
-      ));
+      ),);
     }
   }
 
@@ -168,10 +168,10 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
                   DataCell(Text(
                     passage.plateNumber,
                     style: const TextStyle(fontWeight: FontWeight.w500),
-                  )),
+                  ),),
                   DataCell(Text(passage.vehicleType.label)),
                   DataCell(Text(
-                      checkpost?.name ?? passage.checkpostId.substring(0, 8))),
+                      checkpost?.name ?? passage.checkpostId.substring(0, 8),),),
                   DataCell(Text(_formatNepalTime(passage.recordedAt))),
                   DataCell(_buildSourceBadge(passage.source)),
                   DataCell(_buildMatchedBadge(passage.isMatched)),
@@ -216,11 +216,11 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
             items: [
               const DropdownMenuItem(
                   value: null,
-                  child: Text('All', style: TextStyle(fontSize: 12))),
+                  child: Text('All', style: TextStyle(fontSize: 12)),),
               ..._checkposts.map((cp) => DropdownMenuItem(
                     value: cp.id,
                     child: Text(cp.name, style: const TextStyle(fontSize: 12)),
-                  )),
+                  ),),
             ],
             onChanged: (value) {
               _applyFilter(PassageFilter(
@@ -231,7 +231,7 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
                 plateSearch: _filter.plateSearch,
                 source: _filter.source,
                 isMatched: _filter.isMatched,
-              ));
+              ),);
             },
           ),
         ),
@@ -248,11 +248,11 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
             items: [
               const DropdownMenuItem<VehicleType>(
                   value: null,
-                  child: Text('All', style: TextStyle(fontSize: 12))),
+                  child: Text('All', style: TextStyle(fontSize: 12)),),
               ...VehicleType.values.map((vt) => DropdownMenuItem(
                     value: vt,
                     child: Text(vt.label, style: const TextStyle(fontSize: 12)),
-                  )),
+                  ),),
             ],
             onChanged: (value) {
               _applyFilter(PassageFilter(
@@ -263,7 +263,7 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
                 plateSearch: _filter.plateSearch,
                 source: _filter.source,
                 isMatched: _filter.isMatched,
-              ));
+              ),);
             },
           ),
         ),
@@ -288,7 +288,7 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
                 plateSearch: value.isEmpty ? null : value,
                 source: _filter.source,
                 isMatched: _filter.isMatched,
-              ));
+              ),);
             },
           ),
         ),
@@ -322,7 +322,7 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
                 plateSearch: _filter.plateSearch,
                 source: value,
                 isMatched: _filter.isMatched,
-              ));
+              ),);
             },
           ),
         ),
@@ -356,7 +356,7 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
                 plateSearch: _filter.plateSearch,
                 source: _filter.source,
                 isMatched: value,
-              ));
+              ),);
             },
           ),
         ),

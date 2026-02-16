@@ -118,12 +118,12 @@ class _ViolationDetailScreenState extends ConsumerState<ViolationDetailScreen> {
               child: Column(
                 children: [
                   Icon(Icons.error_outline,
-                      size: 48, color: theme.colorScheme.error),
+                      size: 48, color: theme.colorScheme.error,),
                   const SizedBox(height: 12),
                   Text(_errorMessage!),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                      onPressed: _loadData, child: const Text('Retry')),
+                      onPressed: _loadData, child: const Text('Retry'),),
                 ],
               ),
             )
@@ -173,21 +173,21 @@ class _ViolationDetailScreenState extends ConsumerState<ViolationDetailScreen> {
                   const Divider(height: 32),
                   _buildDetailRow('Segment', _segment?.name ?? v.segmentId),
                   _buildDetailRow(
-                      'Distance', '${v.distanceKm.toStringAsFixed(2)} km'),
+                      'Distance', '${v.distanceKm.toStringAsFixed(2)} km',),
                   _buildDetailRow('Travel Time',
-                      '${v.travelTimeMinutes.toStringAsFixed(1)} min'),
+                      '${v.travelTimeMinutes.toStringAsFixed(1)} min',),
                   _buildDetailRow('Threshold',
-                      '${v.thresholdMinutes.toStringAsFixed(1)} min'),
+                      '${v.thresholdMinutes.toStringAsFixed(1)} min',),
                   _buildDetailRow('Calculated Speed',
-                      '${v.calculatedSpeedKmh.toStringAsFixed(1)} km/h'),
+                      '${v.calculatedSpeedKmh.toStringAsFixed(1)} km/h',),
                   _buildDetailRow('Speed Limit',
-                      '${v.speedLimitKmh.toStringAsFixed(1)} km/h'),
+                      '${v.speedLimitKmh.toStringAsFixed(1)} km/h',),
                   _buildDetailRow('Entry Time', _formatNepalTime(v.entryTime)),
                   _buildDetailRow('Exit Time', _formatNepalTime(v.exitTime)),
                   _buildDetailRow(
                       'Difference',
                       '${v.thresholdDifferenceMinutes.toStringAsFixed(1)} min '
-                          '${v.isSpeeding ? "under" : "over"} threshold'),
+                          '${v.isSpeeding ? "under" : "over"} threshold',),
                   _buildDetailRow('Created At', _formatNepalTime(v.createdAt)),
                   _buildDetailRow('Violation ID', v.id),
                 ],
@@ -205,10 +205,10 @@ class _ViolationDetailScreenState extends ConsumerState<ViolationDetailScreen> {
                   children: [
                     Expanded(
                         child:
-                            _buildPassageCard('Entry Passage', _entryPassage)),
+                            _buildPassageCard('Entry Passage', _entryPassage,),),
                     const SizedBox(width: 16),
                     Expanded(
-                        child: _buildPassageCard('Exit Passage', _exitPassage)),
+                        child: _buildPassageCard('Exit Passage', _exitPassage,),),
                   ],
                 );
               }
@@ -316,11 +316,11 @@ class _ViolationDetailScreenState extends ConsumerState<ViolationDetailScreen> {
               _buildDetailRow('Type', outcome.outcomeType.label),
               if (outcome.fineAmount != null)
                 _buildDetailRow('Fine Amount',
-                    'Rs. ${outcome.fineAmount!.toStringAsFixed(2)}'),
+                    'Rs. ${outcome.fineAmount!.toStringAsFixed(2)}',),
               if (outcome.notes != null)
                 _buildDetailRow('Notes', outcome.notes!),
               _buildDetailRow(
-                  'Recorded At', _formatNepalTime(outcome.recordedAt)),
+                  'Recorded At', _formatNepalTime(outcome.recordedAt),),
               _buildDetailRow('Recorded By', outcome.recordedBy),
             ],
           ],

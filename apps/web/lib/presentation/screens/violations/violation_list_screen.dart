@@ -1,3 +1,4 @@
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
@@ -145,7 +146,7 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
         dateTo: picked.end.add(const Duration(days: 1)),
         plateSearch: _filter.plateSearch,
         hasOutcome: _filter.hasOutcome,
-      ));
+      ),);
     }
   }
 
@@ -208,13 +209,13 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
                   DataCell(Text(
                     v.plateNumber,
                     style: const TextStyle(fontWeight: FontWeight.w500),
-                  )),
+                  ),),
                   DataCell(_buildViolationTypeBadge(v.violationType)),
                   DataCell(Text(v.vehicleType.label)),
                   DataCell(
-                      Text('${v.travelTimeMinutes.toStringAsFixed(1)} min')),
+                      Text('${v.travelTimeMinutes.toStringAsFixed(1)} min',),),
                   DataCell(
-                      Text('${v.calculatedSpeedKmh.toStringAsFixed(1)} km/h')),
+                      Text('${v.calculatedSpeedKmh.toStringAsFixed(1)} km/h',),),
                   DataCell(Text(_formatNepalTime(v.entryTime))),
                   DataCell(Text(_formatNepalTime(v.exitTime))),
                   DataCell(_buildOutcomeBadge(item.outcome)),
@@ -274,7 +275,7 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
                 dateTo: _filter.dateTo,
                 plateSearch: _filter.plateSearch,
                 hasOutcome: _filter.hasOutcome,
-              ));
+              ),);
             },
           ),
         ),
@@ -297,7 +298,7 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
                 dateTo: _filter.dateTo,
                 plateSearch: value.isEmpty ? null : value,
                 hasOutcome: _filter.hasOutcome,
-              ));
+              ),);
             },
           ),
         ),
@@ -329,7 +330,7 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
                 dateTo: _filter.dateTo,
                 plateSearch: _filter.plateSearch,
                 hasOutcome: value,
-              ));
+              ),);
             },
           ),
         ),

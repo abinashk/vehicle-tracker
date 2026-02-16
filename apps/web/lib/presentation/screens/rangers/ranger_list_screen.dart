@@ -87,7 +87,7 @@ class _RangerListScreenState extends ConsumerState<RangerListScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                '${ranger.fullName} has been ${newStatus ? "activated" : "deactivated"}.'),
+                '${ranger.fullName} has been ${newStatus ? "activated" : "deactivated"}.',),
           ),
         );
       }

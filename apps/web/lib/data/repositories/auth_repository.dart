@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class NotAdminException implements Exception {
   final String message;
   const NotAdminException(
-      [this.message = 'Only administrators can access this dashboard.']);
+      [this.message = 'Only administrators can access this dashboard.'],);
 
   @override
   String toString() => message;
@@ -67,7 +67,7 @@ class AuthRepository {
       throw AuthException(e.message);
     } catch (e) {
       if (e is NotAdminException || e is AuthException) rethrow;
-      throw AuthException('Login failed: ${e.toString()}');
+      throw const AuthException('Login failed. Please check your credentials and try again.');
     }
   }
 

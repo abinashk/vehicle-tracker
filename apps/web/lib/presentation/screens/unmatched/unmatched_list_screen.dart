@@ -251,7 +251,7 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.check_circle_outline,
-                size: 48, color: AppTheme.successColor),
+                size: 48, color: AppTheme.successColor,),
             const SizedBox(height: 12),
             Text(
               'No unmatched entries!',
@@ -291,10 +291,10 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
                   DataCell(Text(
                     entry.passage.plateNumber,
                     style: const TextStyle(fontWeight: FontWeight.w500),
-                  )),
+                  ),),
                   DataCell(Text(entry.passage.vehicleType.label)),
                   DataCell(Text(checkpost?.name ??
-                      entry.passage.checkpostId.substring(0, 8))),
+                      entry.passage.checkpostId.substring(0, 8),),),
                   DataCell(Text(_formatNepalTime(entry.passage.recordedAt))),
                   DataCell(Text(_formatDuration(entry.minutesElapsed))),
                   DataCell(
@@ -326,7 +326,7 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
                       label: const Text('Resolve'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                            horizontal: 12, vertical: 8,),
                         textStyle: const TextStyle(fontSize: 12),
                       ),
                     ),

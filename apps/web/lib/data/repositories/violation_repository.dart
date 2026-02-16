@@ -114,6 +114,17 @@ class ViolationRepository {
     int pageSize = defaultPageSize,
     ViolationFilter filter = const ViolationFilter(),
   }) async {
+    // When hasOutcome filter is specified, we need to fetch all violations
+    // and filter by outcome, then apply pagination to the filtered results.
+    // This is necessary because the outcome relationship is in a separate table.
+    if (filter.hasOutcome != null) {
+      return _listViolationsWithOutcomeFilter(
+        page: page,
+        pageSize: pageSize,
+        filter: filter,
+      );
+    }
+
     final from = (page - 1) * pageSize;
     final to = from + pageSize - 1;
 
@@ -140,17 +151,58 @@ class ViolationRepository {
       );
     }).toList();
 
-    // Apply outcome filter if specified.
-    List<ViolationWithOutcome> filtered = items;
-    if (filter.hasOutcome != null) {
-      filtered =
-          items.where((item) => item.hasOutcome == filter.hasOutcome).toList();
-    }
-
     final totalCount = await _getViolationCount(filter);
 
     return PaginatedViolations(
-      items: filtered,
+      items: items,
+      totalCount: totalCount,
+      page: page,
+      pageSize: pageSize,
+    );
+  }
+
+  /// Fetch violations with outcome filter applied.
+  ///
+  /// This handles the hasOutcome filter by fetching all matching violations,
+  /// loading their outcomes, filtering by outcome presence, then paginating.
+  Future<PaginatedViolations> _listViolationsWithOutcomeFilter({
+    required int page,
+    required int pageSize,
+    required ViolationFilter filter,
+  }) async {
+    // Fetch all violations matching other filters (without pagination).
+    var query = _client.from(ApiConstants.violationsTable).select();
+    query = _applyViolationFilters(query, filter);
+    final data = await query.order('created_at', ascending: false);
+
+    final violations =
+        (data as List).map((e) => Violation.fromJson(e)).toList();
+
+    // Fetch outcomes for all violations.
+    final violationIds = violations.map((v) => v.id).toList();
+    final outcomes = await _fetchOutcomes(violationIds);
+
+    // Combine violations with outcomes and apply outcome filter.
+    var items = violations.map((v) {
+      return ViolationWithOutcome(
+        violation: v,
+        outcome: outcomes[v.id],
+      );
+    }).toList();
+
+    items = items.where((item) => item.hasOutcome == filter.hasOutcome).toList();
+
+    // Apply pagination to filtered results.
+    final totalCount = items.length;
+    final from = (page - 1) * pageSize;
+    final to = from + pageSize;
+    final paginatedItems = items.sublist(
+      from,
+      to > items.length ? items.length : to,
+    );
+
+    return PaginatedViolations(
+      items: paginatedItems,
       totalCount: totalCount,
       page: page,
       pageSize: pageSize,
@@ -283,7 +335,7 @@ class ViolationRepository {
   }
 
   Future<Map<String, ViolationOutcome>> _fetchOutcomes(
-      List<String> violationIds) async {
+      List<String> violationIds,) async {
     if (violationIds.isEmpty) return {};
 
     final data = await _client

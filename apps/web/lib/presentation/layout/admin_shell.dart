@@ -21,17 +21,17 @@ class _NavItem {
 
 const _navItems = [
   _NavItem(
-      label: 'Dashboard', icon: Icons.dashboard, path: RoutePaths.dashboard),
-  _NavItem(label: 'Rangers', icon: Icons.person, path: RoutePaths.rangers),
-  _NavItem(label: 'Segments', icon: Icons.route, path: RoutePaths.segments),
+      label: 'Dashboard', icon: Icons.dashboard, path: RoutePaths.dashboard,),
+  _NavItem(label: 'Rangers', icon: Icons.person, path: RoutePaths.rangers,),
+  _NavItem(label: 'Segments', icon: Icons.route, path: RoutePaths.segments,),
   _NavItem(
-      label: 'Passages', icon: Icons.directions_car, path: RoutePaths.passages),
+      label: 'Passages', icon: Icons.directions_car, path: RoutePaths.passages,),
   _NavItem(
       label: 'Violations',
       icon: Icons.warning_amber,
-      path: RoutePaths.violations),
+      path: RoutePaths.violations,),
   _NavItem(
-      label: 'Unmatched', icon: Icons.help_outline, path: RoutePaths.unmatched),
+      label: 'Unmatched', icon: Icons.help_outline, path: RoutePaths.unmatched,),
 ];
 
 /// Responsive admin shell layout with a persistent sidebar on desktop

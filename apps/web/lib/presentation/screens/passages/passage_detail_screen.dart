@@ -109,12 +109,12 @@ class _PassageDetailScreenState extends ConsumerState<PassageDetailScreen> {
               child: Column(
                 children: [
                   Icon(Icons.error_outline,
-                      size: 48, color: theme.colorScheme.error),
+                      size: 48, color: theme.colorScheme.error,),
                   const SizedBox(height: 12),
                   Text(_errorMessage!),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                      onPressed: _loadData, child: const Text('Retry')),
+                      onPressed: _loadData, child: const Text('Retry'),),
                 ],
               ),
             )
@@ -139,21 +139,21 @@ class _PassageDetailScreenState extends ConsumerState<PassageDetailScreen> {
               _buildDetailRow('Plate Number', passage.plateNumber),
               _buildDetailRow('Vehicle Type', passage.vehicleType.label),
               _buildDetailRow(
-                  'Checkpost', _checkpost?.name ?? passage.checkpostId),
+                  'Checkpost', _checkpost?.name ?? passage.checkpostId,),
               _buildDetailRow('Segment', _segment?.name ?? passage.segmentId),
               _buildDetailRow(
-                  'Recorded At', _formatNepalTime(passage.recordedAt)),
+                  'Recorded At', _formatNepalTime(passage.recordedAt),),
               if (passage.serverReceivedAt != null)
                 _buildDetailRow('Server Received',
-                    _formatNepalTime(passage.serverReceivedAt!)),
+                    _formatNepalTime(passage.serverReceivedAt!),),
               _buildDetailRow('Source', passage.source.toUpperCase()),
               _buildDetailRow('Matched', passage.isMatched ? 'Yes' : 'No'),
               if (passage.matchedPassageId != null)
                 _buildDetailRow(
-                    'Matched Passage ID', passage.matchedPassageId!),
+                    'Matched Passage ID', passage.matchedPassageId!,),
               if (passage.isEntry != null)
                 _buildDetailRow(
-                    'Direction', passage.isEntry! ? 'Entry' : 'Exit'),
+                    'Direction', passage.isEntry! ? 'Entry' : 'Exit',),
               _buildDetailRow('Ranger ID', passage.rangerId),
               if (passage.plateNumberRaw != null)
                 _buildDetailRow('Raw Plate', passage.plateNumberRaw!),

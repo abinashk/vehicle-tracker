@@ -107,7 +107,7 @@ class AlertRepository {
           passage: passage,
           segment: segment,
           minutesElapsed: elapsed,
-        ));
+        ),);
       }
     }
 

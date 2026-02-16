@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared/shared.dart';
 
-import 'package:vehicle_tracker_web/core/di/providers.dart';
 import 'package:vehicle_tracker_web/data/repositories/dashboard_repository.dart';
 import 'package:vehicle_tracker_web/presentation/widgets/stat_card.dart';
 
@@ -190,8 +187,11 @@ void main() {
 /// Simplified test filter to verify the filter description logic
 /// without importing the full violation_repository.
 class _TestViolationFilter {
+  // ignore: unused_element
   final String? violationType;
+  // ignore: unused_element
   final String? plateSearch;
+  // ignore: unused_element
   final bool? hasOutcome;
 
   const _TestViolationFilter({

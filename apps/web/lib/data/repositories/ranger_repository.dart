@@ -120,7 +120,7 @@ class RangerRepository {
 
   /// Update a ranger's profile fields.
   Future<UserProfile> updateRanger(
-      String id, UpdateRangerRequest request) async {
+      String id, UpdateRangerRequest request,) async {
     final data = await _client
         .from(ApiConstants.userProfilesTable)
         .update(request.toJson())

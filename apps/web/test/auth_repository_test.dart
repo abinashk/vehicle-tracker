@@ -41,14 +41,14 @@ void main() {
         when(mockAuth.signInWithPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
-        )).thenAnswer((_) async => AuthResponse(
+        ),).thenAnswer((_) async => AuthResponse(
               session: Session(
                 accessToken: 'token',
                 tokenType: 'bearer',
                 user: mockUser,
               ),
               user: mockUser,
-            ));
+            ),);
 
         // Mock the user profile query to return a ranger.
         final mockQueryBuilder = MockSupabaseQueryBuilder();
@@ -56,7 +56,7 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
         when(mockFilterBuilder.single()).thenAnswer((_) async => {
               'id': 'user-123',
@@ -65,7 +65,7 @@ void main() {
               'is_active': true,
               'created_at': DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            });
+            },);
 
         when(mockAuth.signOut()).thenAnswer((_) async {});
 
@@ -92,14 +92,14 @@ void main() {
         when(mockAuth.signInWithPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
-        )).thenAnswer((_) async => AuthResponse(
+        ),).thenAnswer((_) async => AuthResponse(
               session: Session(
                 accessToken: 'token',
                 tokenType: 'bearer',
                 user: mockUser,
               ),
               user: mockUser,
-            ));
+            ),);
 
         // Mock the user profile query to return an admin.
         final mockQueryBuilder = MockSupabaseQueryBuilder();
@@ -107,7 +107,7 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
         when(mockFilterBuilder.single()).thenAnswer((_) async => {
               'id': 'admin-123',
@@ -116,7 +116,7 @@ void main() {
               'is_active': true,
               'created_at': DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            });
+            },);
 
         // Act
         final profile = await authRepository.signIn(
@@ -134,7 +134,7 @@ void main() {
         when(mockAuth.signInWithPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
-        )).thenThrow(AuthApiException('Invalid login credentials'));
+        ),).thenThrow(AuthApiException('Invalid login credentials'));
 
         // Act & Assert
         expect(

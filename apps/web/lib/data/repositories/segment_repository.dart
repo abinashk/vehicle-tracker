@@ -59,7 +59,7 @@ class SegmentRepository {
   /// The database recalculates min_travel_time_minutes and
   /// max_travel_time_minutes via PostgreSQL generated columns.
   Future<HighwaySegment> updateSegment(
-      String id, UpdateSegmentRequest request) async {
+      String id, UpdateSegmentRequest request,) async {
     final data = await _client
         .from(ApiConstants.highwaySegmentsTable)
         .update(request.toJson())

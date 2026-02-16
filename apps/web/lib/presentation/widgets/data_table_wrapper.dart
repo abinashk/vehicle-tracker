@@ -74,7 +74,7 @@ class DataTableWrapper extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(Icons.error_outline,
-                      color: theme.colorScheme.onErrorContainer),
+                      color: theme.colorScheme.onErrorContainer,),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -138,7 +138,7 @@ class DataTableWrapper extends StatelessWidget {
                 if (totalPages > 0)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
+                        horizontal: 16, vertical: 12,),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

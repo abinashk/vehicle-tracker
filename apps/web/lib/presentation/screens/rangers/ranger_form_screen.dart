@@ -227,12 +227,10 @@ class _RangerFormScreenState extends ConsumerState<RangerFormScreen> {
                       if (!widget.isEditing) ...[
                         TextFormField(
                           controller: _usernameController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Username',
                             hintText: 'e.g., ram.sharma',
-                            helperText:
-                                'Will be appended with ${AppConstants.authDomainSuffix}',
-                            prefixIcon: const Icon(Icons.person_outline),
+                            prefixIcon: Icon(Icons.person_outline),
                           ),
                           textInputAction: TextInputAction.next,
                           validator: (value) {
