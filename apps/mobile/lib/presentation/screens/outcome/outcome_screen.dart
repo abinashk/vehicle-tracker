@@ -164,8 +164,11 @@ class _OutcomeScreenState extends ConsumerState<OutcomeScreen> {
                           ),
                           const Spacer(),
                           if (isSelected)
-                            const Icon(Icons.check_circle,
-                                color: AppTheme.amber, size: 24),
+                            const Icon(
+                              Icons.check_circle,
+                              color: AppTheme.amber,
+                              size: 24,
+                            ),
                         ],
                       ),
                     ),

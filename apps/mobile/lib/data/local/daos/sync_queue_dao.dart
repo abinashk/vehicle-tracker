@@ -116,7 +116,7 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase>
           ..where((t) =>
               t.status.equals('pending') &
               t.smsSent.equals(false) &
-              t.createdAt.isSmallerThanValue(cutoff))
+              t.createdAt.isSmallerThanValue(cutoff),)
           ..orderBy([
             (t) => OrderingTerm.asc(t.createdAt),
           ]))

@@ -112,7 +112,7 @@ class ViolationDao extends DatabaseAccessor<AppDatabase>
     return (select(localViolations)
           ..where((t) =>
               t.entryPassageId.equals(passageId) |
-              t.exitPassageId.equals(passageId)))
+              t.exitPassageId.equals(passageId),))
         .get();
   }
 }

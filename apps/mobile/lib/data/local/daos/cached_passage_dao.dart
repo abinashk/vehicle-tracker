@@ -18,11 +18,11 @@ class CachedPassageDao extends DatabaseAccessor<AppDatabase>
   ///
   /// Uses insertOnConflictUpdate to handle duplicates gracefully.
   Future<void> upsertPassages(
-      List<CachedRemotePassagesCompanion> passages) async {
+      List<CachedRemotePassagesCompanion> passages,) async {
     await batch((b) {
       for (final passage in passages) {
         b.insert(cachedRemotePassages, passage,
-            onConflict: DoUpdate((_) => passage));
+            onConflict: DoUpdate((_) => passage),);
       }
     });
   }
@@ -39,7 +39,7 @@ class CachedPassageDao extends DatabaseAccessor<AppDatabase>
               t.plateNumber.equals(plateNumber) &
               t.segmentId.equals(segmentId) &
               t.checkpostId.isNotValue(excludeCheckpostId) &
-              t.matchedPassageId.isNull())
+              t.matchedPassageId.isNull(),)
           ..orderBy([
             (t) => OrderingTerm.desc(t.recordedAt),
           ]))

@@ -51,7 +51,7 @@ class PassageDao extends DatabaseAccessor<AppDatabase> with _$PassageDaoMixin {
     return (select(localPassages)
           ..where((t) =>
               t.checkpostId.equals(checkpostId) &
-              t.recordedAt.isBiggerOrEqualValue(todayStart))
+              t.recordedAt.isBiggerOrEqualValue(todayStart),)
           ..orderBy([
             (t) => OrderingTerm.desc(t.recordedAt),
           ]))
@@ -98,7 +98,7 @@ class PassageDao extends DatabaseAccessor<AppDatabase> with _$PassageDaoMixin {
           ..where((t) =>
               t.segmentId.equals(segmentId) &
               t.checkpostId.equals(checkpostId) &
-              t.matchedPassageId.isNull()))
+              t.matchedPassageId.isNull(),))
         .get();
   }
 
@@ -106,7 +106,7 @@ class PassageDao extends DatabaseAccessor<AppDatabase> with _$PassageDaoMixin {
   Future<List<LocalPassage>> getPassagesWithPendingPhotos() {
     return (select(localPassages)
           ..where(
-              (t) => t.photoLocalPath.isNotNull() & t.photoPath.isNull())
+              (t) => t.photoLocalPath.isNotNull() & t.photoPath.isNull(),)
           ..limit(20))
         .get();
   }

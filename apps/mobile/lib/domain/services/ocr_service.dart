@@ -63,7 +63,7 @@ class OcrService {
             normalized: normalized,
             raw: line.text,
             confidence: _calculateConfidence(line),
-          ));
+          ),);
         }
       }
     }
@@ -76,7 +76,7 @@ class OcrService {
             normalized: normalized,
             raw: line.text,
             confidence: _calculateConfidence(line),
-          ));
+          ),);
         }
       }
     }

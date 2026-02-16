@@ -188,8 +188,11 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color: Colors.white, size: 28),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                       onPressed: () => context.pop(),
                     ),
                     IconButton(

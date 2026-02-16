@@ -96,8 +96,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.history,
-                              size: 64, color: AppTheme.textHint),
+                          Icon(
+                            Icons.history,
+                            size: 64,
+                            color: AppTheme.textHint,
+                          ),
                           SizedBox(height: 16),
                           Text(
                             'No recordings found',

@@ -77,7 +77,7 @@ class PassageRepository {
         recordedAt: recordedAt.toUtc(),
         rangerId: rangerId,
         photoLocalPath: Value(photoLocalPath),
-        source: Value('app'),
+        source: const Value('app'),
         createdAt: now,
       ),
     );

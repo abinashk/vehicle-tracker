@@ -222,7 +222,7 @@ class SyncRepository {
                 isEntry: Value(p.isEntry),
                 createdAt: p.createdAt,
                 cachedAt: DateTime.now().toUtc(),
-              ))
+              ),)
           .toList();
 
       await _cachedPassageDao.upsertPassages(companions);

@@ -95,11 +95,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     textInputAction: TextInputAction.next,
                     autocorrect: false,
                     style: const TextStyle(fontSize: 18),
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Username',
-                      prefixIcon: const Icon(Icons.person, size: 24),
+                      prefixIcon: Icon(Icons.person, size: 24),
                       suffixText: AppConstants.authDomainSuffix,
-                      suffixStyle: const TextStyle(
+                      suffixStyle: TextStyle(
                         color: AppTheme.textHint,
                         fontSize: 16,
                       ),
@@ -154,12 +154,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         color: AppTheme.red.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                            color: AppTheme.red.withOpacity(0.5)),
+                          color: AppTheme.red.withOpacity(0.5),
+                        ),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.error_outline,
-                              color: AppTheme.red, size: 24),
+                          const Icon(
+                            Icons.error_outline,
+                            color: AppTheme.red,
+                            size: 24,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(

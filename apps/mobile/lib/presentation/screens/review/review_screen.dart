@@ -172,8 +172,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                       errorBuilder: (_, __, ___) => Container(
                         color: AppTheme.surface,
                         child: const Center(
-                          child: Icon(Icons.broken_image,
-                              size: 48, color: AppTheme.textHint),
+                          child: Icon(
+                            Icons.broken_image,
+                            size: 48,
+                            color: AppTheme.textHint,
+                          ),
                         ),
                       ),
                     ),
@@ -184,8 +187,11 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 // Timestamp display
                 Row(
                   children: [
-                    const Icon(Icons.access_time,
-                        size: 18, color: AppTheme.textSecondary),
+                    const Icon(
+                      Icons.access_time,
+                      size: 18,
+                      color: AppTheme.textSecondary,
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       'Captured at $timeStr',

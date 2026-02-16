@@ -91,7 +91,7 @@ void main() {
         plateNumber: anyNamed('plateNumber'),
         segmentId: anyNamed('segmentId'),
         excludeCheckpostId: anyNamed('excludeCheckpostId'),
-      )).thenAnswer((_) async => []);
+      ),).thenAnswer((_) async => []);
 
       final passage = createPassage(
         id: 'exit-1',
@@ -118,7 +118,7 @@ void main() {
         plateNumber: anyNamed('plateNumber'),
         segmentId: anyNamed('segmentId'),
         excludeCheckpostId: anyNamed('excludeCheckpostId'),
-      )).thenAnswer((_) async => [cachedEntry]);
+      ),).thenAnswer((_) async => [cachedEntry]);
 
       when(mockCachedPassageDao.markAsMatched(any, any))
           .thenAnswer((_) async {});
@@ -155,7 +155,7 @@ void main() {
         calculatedSpeedKmh: anyNamed('calculatedSpeedKmh'),
         speedLimitKmh: anyNamed('speedLimitKmh'),
         distanceKm: anyNamed('distanceKm'),
-      )).thenAnswer((_) async => speedingViolation);
+      ),).thenAnswer((_) async => speedingViolation);
 
       final exitPassage = createPassage(
         id: 'exit-1',
@@ -185,7 +185,7 @@ void main() {
         calculatedSpeedKmh: anyNamed('calculatedSpeedKmh'),
         speedLimitKmh: 40.0,
         distanceKm: 20.0,
-      )).called(1);
+      ),).called(1);
     });
 
     test('no violation when travel time is normal', () async {
@@ -198,7 +198,7 @@ void main() {
         plateNumber: anyNamed('plateNumber'),
         segmentId: anyNamed('segmentId'),
         excludeCheckpostId: anyNamed('excludeCheckpostId'),
-      )).thenAnswer((_) async => [cachedEntry]);
+      ),).thenAnswer((_) async => [cachedEntry]);
 
       when(mockCachedPassageDao.markAsMatched(any, any))
           .thenAnswer((_) async {});
@@ -229,7 +229,7 @@ void main() {
         calculatedSpeedKmh: anyNamed('calculatedSpeedKmh'),
         speedLimitKmh: anyNamed('speedLimitKmh'),
         distanceKm: anyNamed('distanceKm'),
-      ));
+      ),);
     });
 
     test('detects overstay violation when travel time exceeds maximum',
@@ -243,7 +243,7 @@ void main() {
         plateNumber: anyNamed('plateNumber'),
         segmentId: anyNamed('segmentId'),
         excludeCheckpostId: anyNamed('excludeCheckpostId'),
-      )).thenAnswer((_) async => [cachedEntry]);
+      ),).thenAnswer((_) async => [cachedEntry]);
 
       when(mockCachedPassageDao.markAsMatched(any, any))
           .thenAnswer((_) async {});
@@ -280,7 +280,7 @@ void main() {
         calculatedSpeedKmh: anyNamed('calculatedSpeedKmh'),
         speedLimitKmh: anyNamed('speedLimitKmh'),
         distanceKm: anyNamed('distanceKm'),
-      )).thenAnswer((_) async => overstayViolation);
+      ),).thenAnswer((_) async => overstayViolation);
 
       final overstayPassage = createPassage(
         id: 'exit-1',
@@ -308,7 +308,7 @@ void main() {
         plateNumber: anyNamed('plateNumber'),
         segmentId: anyNamed('segmentId'),
         excludeCheckpostId: anyNamed('excludeCheckpostId'),
-      )).thenAnswer((_) async => [laterCachedEntry]);
+      ),).thenAnswer((_) async => [laterCachedEntry]);
 
       when(mockCachedPassageDao.markAsMatched(any, any))
           .thenAnswer((_) async {});
@@ -338,7 +338,7 @@ void main() {
         plateNumber: anyNamed('plateNumber'),
         segmentId: anyNamed('segmentId'),
         excludeCheckpostId: anyNamed('excludeCheckpostId'),
-      )).thenAnswer((_) async => [cachedEntry]);
+      ),).thenAnswer((_) async => [cachedEntry]);
 
       when(mockCachedPassageDao.markAsMatched(any, any))
           .thenAnswer((_) async {});
