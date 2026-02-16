@@ -162,7 +162,7 @@ class _PassageDetailScreenState extends ConsumerState<PassageDetailScreen> {
               _buildDetailRow('ID', passage.id),
               _buildDetailRow('Client ID', passage.clientId),
               _buildDetailRow(
-                  'Created At', _formatNepalTime(passage.createdAt)),
+                  'Created At', _formatNepalTime(passage.createdAt),),
             ],
           ),
         ),

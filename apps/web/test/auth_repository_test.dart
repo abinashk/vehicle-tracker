@@ -56,7 +56,7 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<Map<String, dynamic>>);
         when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
         when(mockFilterBuilder.single()).thenAnswer((_) async => {
               'id': 'user-123',
@@ -107,7 +107,7 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<Map<String, dynamic>>);
         when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
         when(mockFilterBuilder.single()).thenAnswer((_) async => {
               'id': 'admin-123',
@@ -178,7 +178,7 @@ void main() {
     test('should have a default message', () {
       const exception = NotAdminException();
       expect(
-          exception.message, 'Only administrators can access this dashboard.');
+          exception.message, 'Only administrators can access this dashboard.',);
     });
 
     test('should accept a custom message', () {

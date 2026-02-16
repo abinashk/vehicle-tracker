@@ -207,7 +207,7 @@ class _RangerFormScreenState extends ConsumerState<RangerFormScreen> {
                           child: Row(
                             children: [
                               Icon(Icons.error_outline,
-                                  color: theme.colorScheme.onErrorContainer),
+                                  color: theme.colorScheme.onErrorContainer,),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
@@ -381,7 +381,7 @@ class _RangerFormScreenState extends ConsumerState<RangerFormScreen> {
                                 )
                               : Text(widget.isEditing
                                   ? 'Update Ranger'
-                                  : 'Create Ranger'),
+                                  : 'Create Ranger',),
                         ),
                       ),
                     ],

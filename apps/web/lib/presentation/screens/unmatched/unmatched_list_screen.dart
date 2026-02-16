@@ -326,7 +326,7 @@ class _UnmatchedListScreenState extends ConsumerState<UnmatchedListScreen> {
                       label: const Text('Resolve'),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8,),
+                            horizontal: 12, vertical: 8),
                         textStyle: const TextStyle(fontSize: 12),
                       ),
                     ),

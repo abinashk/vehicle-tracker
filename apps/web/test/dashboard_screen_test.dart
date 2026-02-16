@@ -187,16 +187,16 @@ void main() {
 /// Simplified test filter to verify the filter description logic
 /// without importing the full violation_repository.
 class _TestViolationFilter {
-  // ignore: unused_element
   final String? violationType;
-  // ignore: unused_element
   final String? plateSearch;
-  // ignore: unused_element
   final bool? hasOutcome;
 
   const _TestViolationFilter({
+    // ignore: unused_element
     this.violationType,
+    // ignore: unused_element
     this.plateSearch,
+    // ignore: unused_element
     this.hasOutcome,
   });
 

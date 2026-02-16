@@ -260,13 +260,13 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
             items: const [
               DropdownMenuItem<ViolationType>(
                   value: null,
-                  child: Text('All', style: TextStyle(fontSize: 12))),
+                  child: Text('All', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: ViolationType.speeding,
-                  child: Text('Speeding', style: TextStyle(fontSize: 12))),
+                  child: Text('Speeding', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: ViolationType.overstay,
-                  child: Text('Overstay', style: TextStyle(fontSize: 12))),
+                  child: Text('Overstay', style: TextStyle(fontSize: 12)),),
             ],
             onChanged: (value) {
               _applyFilter(ViolationFilter(
@@ -315,13 +315,13 @@ class _ViolationListScreenState extends ConsumerState<ViolationListScreen> {
             items: const [
               DropdownMenuItem<bool>(
                   value: null,
-                  child: Text('All', style: TextStyle(fontSize: 12))),
+                  child: Text('All', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: true,
-                  child: Text('Has Outcome', style: TextStyle(fontSize: 12))),
+                  child: Text('Has Outcome', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: false,
-                  child: Text('No Outcome', style: TextStyle(fontSize: 12))),
+                  child: Text('No Outcome', style: TextStyle(fontSize: 12)),),
             ],
             onChanged: (value) {
               _applyFilter(ViolationFilter(

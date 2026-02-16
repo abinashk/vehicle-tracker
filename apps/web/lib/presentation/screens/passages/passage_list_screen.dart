@@ -305,13 +305,13 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
             items: const [
               DropdownMenuItem(
                   value: null,
-                  child: Text('All', style: TextStyle(fontSize: 12))),
+                  child: Text('All', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: 'app',
-                  child: Text('App', style: TextStyle(fontSize: 12))),
+                  child: Text('App', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: 'sms',
-                  child: Text('SMS', style: TextStyle(fontSize: 12))),
+                  child: Text('SMS', style: TextStyle(fontSize: 12)),),
             ],
             onChanged: (value) {
               _applyFilter(PassageFilter(
@@ -339,13 +339,13 @@ class _PassageListScreenState extends ConsumerState<PassageListScreen> {
             items: const [
               DropdownMenuItem<bool>(
                   value: null,
-                  child: Text('All', style: TextStyle(fontSize: 12))),
+                  child: Text('All', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: true,
-                  child: Text('Matched', style: TextStyle(fontSize: 12))),
+                  child: Text('Matched', style: TextStyle(fontSize: 12)),),
               DropdownMenuItem(
                   value: false,
-                  child: Text('Unmatched', style: TextStyle(fontSize: 12))),
+                  child: Text('Unmatched', style: TextStyle(fontSize: 12)),),
             ],
             onChanged: (value) {
               _applyFilter(PassageFilter(

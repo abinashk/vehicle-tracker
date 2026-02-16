@@ -57,7 +57,7 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<List<Map<String, dynamic>>>);
         when(mockFilterBuilder.eq('role', 'ranger'))
             .thenReturn(mockFilterBuilder);
         when(mockFilterBuilder.order('full_name', ascending: true))
@@ -83,7 +83,7 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<Map<String, dynamic>>);
         when(mockFilterBuilder.eq('id', 'ranger-001'))
             .thenReturn(mockFilterBuilder);
         when(mockFilterBuilder.single())
@@ -107,14 +107,14 @@ void main() {
 
         when(mockClient.from(ApiConstants.userProfilesTable))
             .thenReturn(mockQueryBuilder);
-        when(mockQueryBuilder.update(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockQueryBuilder.update(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<List<Map<String, dynamic>>>);
         when(mockFilterBuilder.eq('id', 'ranger-001'))
             .thenReturn(mockFilterBuilder);
-        when(mockFilterBuilder.select(any)).thenReturn(mockFilterBuilder as dynamic);
+        when(mockFilterBuilder.select(any)).thenReturn(mockFilterBuilder as PostgrestTransformBuilder<Map<String, dynamic>>);
         when(mockFilterBuilder.single()).thenAnswer((_) async => {
               ...sampleRangerJson,
               'is_active': false,
-            },);
+            });
 
         // Act
         final ranger = await rangerRepository.toggleActive(
