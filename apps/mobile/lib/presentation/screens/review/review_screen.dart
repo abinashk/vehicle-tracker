@@ -104,6 +104,8 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         final audioService = ref.read(audioAlertServiceProvider);
         await audioService.playViolationAlert(result.violation!.violationType);
 
+        if (!mounted) return;
+
         // Navigate to alert screen.
         context.go(
           AppRoutes.alert,
