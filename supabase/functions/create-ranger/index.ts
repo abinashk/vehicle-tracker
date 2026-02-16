@@ -31,8 +31,8 @@ function validateRequest(body: CreateRangerRequest): string | null {
     return 'username is required and must be a non-empty string';
   }
 
-  if (!body.password || typeof body.password !== 'string' || body.password.length < 6) {
-    return 'password is required and must be at least 6 characters';
+  if (!body.password || typeof body.password !== 'string' || body.password.length < 8) {
+    return 'password is required and must be at least 8 characters';
   }
 
   if (!body.full_name || typeof body.full_name !== 'string' || body.full_name.trim().length === 0) {

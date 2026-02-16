@@ -85,111 +85,29 @@ serve(async (req) => {
 
     // Find unmatched passages that have exceeded max_travel_time_minutes,
     // excluding those that already have a proactive_overstay_alert.
-    //
-    // Query logic:
-    // 1. vehicle_passages WHERE matched_passage_id IS NULL
-    // 2. JOIN highway_segments to get max_travel_time_minutes
-    // 3. Filter WHERE recorded_at + max_travel_time_minutes < now()
-    // 4. LEFT JOIN proactive_overstay_alerts to skip already-alerted entries
+    // Uses the find_overdue_unmatched_passages RPC (migration 00013).
     const { data: overduePassages, error: queryError } = await supabase
       .rpc('find_overdue_unmatched_passages');
 
-    // If the RPC doesn't exist, fall back to a raw query approach
-    // We use a raw SQL query via supabase.rpc or construct it with the query builder
-    let passages: Array<{
+    if (queryError) {
+      console.error('Error calling find_overdue_unmatched_passages RPC:', queryError.message);
+      return new Response(
+        JSON.stringify({ error: 'Failed to query overdue passages' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      );
+    }
+
+    const passages: Array<{
       id: string;
       plate_number: string;
       vehicle_type: string;
       recorded_at: string;
       segment_id: string;
       max_travel_time_minutes: number;
-    }>;
-
-    if (queryError) {
-      // RPC not available; use a two-step approach with the query builder
-      // Step 1: Get all unmatched passages with segment info
-      const { data: unmatchedData, error: unmatchedError } = await supabase
-        .from('vehicle_passages')
-        .select(`
-          id,
-          plate_number,
-          vehicle_type,
-          recorded_at,
-          segment_id,
-          highway_segments!inner (
-            max_travel_time_minutes
-          )
-        `)
-        .is('matched_passage_id', null)
-        .order('recorded_at', { ascending: true });
-
-      if (unmatchedError) {
-        console.error('Error querying unmatched passages:', unmatchedError.message);
-        return new Response(
-          JSON.stringify({ error: 'Failed to query unmatched passages' }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          },
-        );
-      }
-
-      if (!unmatchedData || unmatchedData.length === 0) {
-        return new Response(
-          JSON.stringify({ alerts_created: 0, message: 'No overdue passages found' }),
-          {
-            status: 200,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          },
-        );
-      }
-
-      // Step 2: Get existing alert entry_passage_ids to avoid duplicates
-      const passageIds = unmatchedData.map((p: Record<string, unknown>) => p.id);
-      const { data: existingAlerts, error: alertsError } = await supabase
-        .from('proactive_overstay_alerts')
-        .select('entry_passage_id')
-        .in('entry_passage_id', passageIds);
-
-      if (alertsError) {
-        console.error('Error querying existing alerts:', alertsError.message);
-        return new Response(
-          JSON.stringify({ error: 'Failed to check existing alerts' }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          },
-        );
-      }
-
-      const existingAlertPassageIds = new Set(
-        (existingAlerts || []).map((a: Record<string, unknown>) => a.entry_passage_id),
-      );
-
-      // Step 3: Filter for overdue passages without existing alerts
-      const now = new Date();
-      passages = unmatchedData
-        .filter((p: Record<string, unknown>) => {
-          const segment = p.highway_segments as Record<string, unknown>;
-          const maxMinutes = Number(segment.max_travel_time_minutes);
-          const recordedAt = new Date(p.recorded_at as string);
-          const expectedExitBy = new Date(recordedAt.getTime() + maxMinutes * 60 * 1000);
-          return expectedExitBy < now && !existingAlertPassageIds.has(p.id);
-        })
-        .map((p: Record<string, unknown>) => {
-          const segment = p.highway_segments as Record<string, unknown>;
-          return {
-            id: p.id as string,
-            plate_number: p.plate_number as string,
-            vehicle_type: p.vehicle_type as string,
-            recorded_at: p.recorded_at as string,
-            segment_id: p.segment_id as string,
-            max_travel_time_minutes: Number(segment.max_travel_time_minutes),
-          };
-        });
-    } else {
-      passages = overduePassages || [];
-    }
+    }> = overduePassages || [];
 
     if (passages.length === 0) {
       return new Response(

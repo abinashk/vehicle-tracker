@@ -7,7 +7,21 @@
 -- =============================================================================
 -- Fix #2: Add UNIQUE constraint on proactive_overstay_alerts.entry_passage_id
 -- Prevents duplicate alerts for the same entry passage.
+-- First deduplicate any existing rows (keep most recent per entry_passage_id).
 -- =============================================================================
+DELETE FROM public.proactive_overstay_alerts
+WHERE id IN (
+    SELECT id FROM (
+        SELECT id,
+               ROW_NUMBER() OVER (
+                   PARTITION BY entry_passage_id
+                   ORDER BY created_at DESC
+               ) AS rn
+        FROM public.proactive_overstay_alerts
+    ) ranked
+    WHERE ranked.rn > 1
+);
+
 ALTER TABLE public.proactive_overstay_alerts
     ADD CONSTRAINT uq_overstay_alerts_entry_passage_id
     UNIQUE (entry_passage_id);
@@ -108,3 +122,10 @@ AS $$
 $$;
 
 COMMENT ON FUNCTION public.find_overdue_unmatched_passages() IS 'Returns unmatched vehicle passages that have exceeded their segment max travel time and do not yet have a proactive overstay alert.';
+
+-- =============================================================================
+-- Grant execute permissions to service_role for both new functions.
+-- Edge functions call these via service role client.
+-- =============================================================================
+GRANT EXECUTE ON FUNCTION public.fn_match_passages(uuid, uuid) TO service_role;
+GRANT EXECUTE ON FUNCTION public.find_overdue_unmatched_passages() TO service_role;
