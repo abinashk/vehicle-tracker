@@ -221,8 +221,8 @@ serve(async (req) => {
       actualExitTime = entryTime;
     }
 
-    // Use RPC to perform the match atomically with SELECT FOR UPDATE
-    // This prevents double-matching race conditions
+    // Use RPC to perform the match atomically with SELECT FOR UPDATE.
+    // This prevents double-matching race conditions via row-level locking.
     const { data: matchRpcResult, error: rpcError } = await supabase.rpc(
       'fn_match_passages',
       {
@@ -231,56 +231,11 @@ serve(async (req) => {
       },
     );
 
-    // If the RPC doesn't exist, fall back to direct updates
     if (rpcError) {
-      // Perform matching via direct updates (service client bypasses RLS)
-      // Lock and verify both passages are still unmatched
-      const { data: lockedPassages, error: lockError } = await supabase
-        .from('vehicle_passages')
-        .select('id, matched_passage_id')
-        .in('id', [actualEntryId, actualExitId]);
-
-      if (lockError) {
-        console.error('Error locking passages:', lockError.message);
+      // Check if it's a "passage already matched" error from the RPC
+      if (rpcError.message?.includes('already matched')) {
         return new Response(
-          JSON.stringify({ error: 'Failed to lock passages for matching' }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          },
-        );
-      }
-
-      // Re-verify both are still unmatched (race condition check)
-      for (const lp of lockedPassages || []) {
-        if (lp.matched_passage_id !== null) {
-          return new Response(
-            JSON.stringify({
-              error: 'Passage was matched by another request',
-              passage_id: lp.id,
-            }),
-            {
-              status: 409,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            },
-          );
-        }
-      }
-
-      // Link entry passage
-      const { error: updateEntryError } = await supabase
-        .from('vehicle_passages')
-        .update({
-          matched_passage_id: actualExitId,
-          is_entry: true,
-        })
-        .eq('id', actualEntryId)
-        .is('matched_passage_id', null);
-
-      if (updateEntryError) {
-        console.error('Error updating entry passage:', updateEntryError.message);
-        return new Response(
-          JSON.stringify({ error: 'Failed to update entry passage - may have been matched concurrently' }),
+          JSON.stringify({ error: rpcError.message }),
           {
             status: 409,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -288,32 +243,14 @@ serve(async (req) => {
         );
       }
 
-      // Link exit passage
-      const { error: updateExitError } = await supabase
-        .from('vehicle_passages')
-        .update({
-          matched_passage_id: actualEntryId,
-          is_entry: false,
-        })
-        .eq('id', actualExitId)
-        .is('matched_passage_id', null);
-
-      if (updateExitError) {
-        // Rollback the entry update
-        await supabase
-          .from('vehicle_passages')
-          .update({ matched_passage_id: null, is_entry: null })
-          .eq('id', actualEntryId);
-
-        console.error('Error updating exit passage:', updateExitError.message);
-        return new Response(
-          JSON.stringify({ error: 'Failed to update exit passage - may have been matched concurrently' }),
-          {
-            status: 409,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          },
-        );
-      }
+      console.error('Error in fn_match_passages RPC:', rpcError.message);
+      return new Response(
+        JSON.stringify({ error: 'Failed to match passages' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      );
     }
 
     // Calculate travel time
