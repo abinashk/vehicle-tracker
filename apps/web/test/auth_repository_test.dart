@@ -65,7 +65,7 @@ void main() {
               'is_active': true,
               'created_at': DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            });
+            },);
 
         when(mockAuth.signOut()).thenAnswer((_) async {});
 
@@ -116,7 +116,7 @@ void main() {
               'is_active': true,
               'created_at': DateTime.now().toIso8601String(),
               'updated_at': DateTime.now().toIso8601String(),
-            });
+            },);
 
         // Act
         final profile = await authRepository.signIn(
