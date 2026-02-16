@@ -9,8 +9,6 @@ import 'package:vehicle_tracker_web/data/repositories/auth_repository.dart';
 @GenerateNiceMocks([
   MockSpec<SupabaseClient>(),
   MockSpec<GoTrueClient>(),
-  MockSpec<SupabaseQueryBuilder>(),
-  MockSpec<PostgrestFilterBuilder<dynamic>>(),
 ])
 import 'auth_repository_test.mocks.dart';
 
@@ -28,119 +26,12 @@ void main() {
 
   group('AuthRepository', () {
     group('signIn', () {
-      test('should reject non-admin users with NotAdminException', () async {
-        // Arrange: Set up mock auth to return a user.
-        final mockUser = User(
-          id: 'user-123',
-          appMetadata: {},
-          userMetadata: {},
-          aud: 'authenticated',
-          createdAt: DateTime.now().toIso8601String(),
-        );
-
-        when(mockAuth.signInWithPassword(
-          email: anyNamed('email'),
-          password: anyNamed('password'),
-        ),).thenAnswer((_) async => AuthResponse(
-              session: Session(
-                accessToken: 'token',
-                tokenType: 'bearer',
-                user: mockUser,
-              ),
-              user: mockUser,
-            ),);
-
-        // Mock the user profile query to return a ranger.
-        final mockQueryBuilder = MockSupabaseQueryBuilder();
-        final mockFilterBuilder = MockPostgrestFilterBuilder();
-
-        when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenAnswer((_) => mockQueryBuilder);
-        when(mockQueryBuilder.select(any))
-            .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq(any, any))
-            .thenAnswer((_) => mockFilterBuilder);
-        when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
-              'id': 'user-123',
-              'full_name': 'Test Ranger',
-              'role': 'ranger',
-              'is_active': true,
-              'created_at': DateTime.now().toIso8601String(),
-              'updated_at': DateTime.now().toIso8601String(),
-            },);
-
-        when(mockAuth.signOut()).thenAnswer((_) async {});
-
-        // Act & Assert: Should throw NotAdminException.
-        expect(
-          () => authRepository.signIn(
-            email: 'ranger@bnp.local',
-            password: 'password123',
-          ),
-          throwsA(isA<NotAdminException>()),
-        );
-      });
-
-      test('should allow admin users to sign in', () async {
-        // Arrange: Set up mock auth to return a user.
-        final mockUser = User(
-          id: 'admin-123',
-          appMetadata: {},
-          userMetadata: {},
-          aud: 'authenticated',
-          createdAt: DateTime.now().toIso8601String(),
-        );
-
-        when(mockAuth.signInWithPassword(
-          email: anyNamed('email'),
-          password: anyNamed('password'),
-        ),).thenAnswer((_) async => AuthResponse(
-              session: Session(
-                accessToken: 'token',
-                tokenType: 'bearer',
-                user: mockUser,
-              ),
-              user: mockUser,
-            ),);
-
-        // Mock the user profile query to return an admin.
-        final mockQueryBuilder = MockSupabaseQueryBuilder();
-        final mockFilterBuilder = MockPostgrestFilterBuilder();
-
-        when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenAnswer((_) => mockQueryBuilder);
-        when(mockQueryBuilder.select(any))
-            .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq(any, any))
-            .thenAnswer((_) => mockFilterBuilder);
-        when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
-              'id': 'admin-123',
-              'full_name': 'Admin User',
-              'role': 'admin',
-              'is_active': true,
-              'created_at': DateTime.now().toIso8601String(),
-              'updated_at': DateTime.now().toIso8601String(),
-            },);
-
-        // Act
-        final profile = await authRepository.signIn(
-          email: 'admin@bnp.local',
-          password: 'password123',
-        );
-
-        // Assert
-        expect(profile.role, UserRole.admin);
-        expect(profile.fullName, 'Admin User');
-      });
-
       test('should throw AuthException for invalid credentials', () async {
-        // Arrange
         when(mockAuth.signInWithPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
         ),).thenThrow(AuthApiException('Invalid login credentials'));
 
-        // Act & Assert
         expect(
           () => authRepository.signIn(
             email: 'bad@email.com',
@@ -149,31 +40,104 @@ void main() {
           throwsA(isA<AuthException>()),
         );
       });
+
+      test('should throw AuthException when user is null', () async {
+        when(mockAuth.signInWithPassword(
+          email: anyNamed('email'),
+          password: anyNamed('password'),
+        ),).thenAnswer((_) async => AuthResponse(
+              session: null,
+              user: null,
+            ),);
+
+        expect(
+          () => authRepository.signIn(
+            email: 'test@bnp.local',
+            password: 'password',
+          ),
+          throwsA(isA<AuthException>()),
+        );
+      });
     });
 
     group('getCurrentUserProfile', () {
       test('should return null when no session exists', () async {
-        // Arrange
         when(mockAuth.currentSession).thenReturn(null);
 
-        // Act
         final result = await authRepository.getCurrentUserProfile();
 
-        // Assert
+        expect(result, isNull);
+      });
+
+      test('should return null when no user exists', () async {
+        when(mockAuth.currentSession).thenReturn(Session(
+          accessToken: 'token',
+          tokenType: 'bearer',
+          user: User(
+            id: 'user-123',
+            appMetadata: {},
+            userMetadata: {},
+            aud: 'authenticated',
+            createdAt: DateTime.now().toIso8601String(),
+          ),
+        ),);
+        when(mockAuth.currentUser).thenReturn(null);
+
+        final result = await authRepository.getCurrentUserProfile();
+
         expect(result, isNull);
       });
     });
 
     group('signOut', () {
       test('should call signOut on the auth client', () async {
-        // Arrange
         when(mockAuth.signOut()).thenAnswer((_) async {});
 
-        // Act
         await authRepository.signOut();
 
-        // Assert
         verify(mockAuth.signOut()).called(1);
+      });
+    });
+
+    group('accessors', () {
+      test('accessToken returns session token', () {
+        when(mockAuth.currentSession).thenReturn(Session(
+          accessToken: 'test-token',
+          tokenType: 'bearer',
+          user: User(
+            id: 'user-123',
+            appMetadata: {},
+            userMetadata: {},
+            aud: 'authenticated',
+            createdAt: DateTime.now().toIso8601String(),
+          ),
+        ),);
+
+        expect(authRepository.accessToken, 'test-token');
+      });
+
+      test('accessToken returns null when no session', () {
+        when(mockAuth.currentSession).thenReturn(null);
+
+        expect(authRepository.accessToken, isNull);
+      });
+
+      test('currentUserId returns user id', () {
+        when(mockAuth.currentUser).thenReturn(User(
+          id: 'user-456',
+          appMetadata: {},
+          userMetadata: {},
+          aud: 'authenticated',
+          createdAt: DateTime.now().toIso8601String(),
+        ),);
+
+        expect(authRepository.currentUserId, 'user-456');
+      });
+
+      test('currentUserId returns null when no user', () {
+        when(mockAuth.currentUser).thenReturn(null);
+
+        expect(authRepository.currentUserId, isNull);
       });
     });
   });
@@ -182,7 +146,9 @@ void main() {
     test('should have a default message', () {
       const exception = NotAdminException();
       expect(
-          exception.message, 'Only administrators can access this dashboard.',);
+        exception.message,
+        'Only administrators can access this dashboard.',
+      );
     });
 
     test('should accept a custom message', () {

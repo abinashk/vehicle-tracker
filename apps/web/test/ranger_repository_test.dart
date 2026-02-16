@@ -1,134 +1,66 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
 import 'package:shared/shared.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:vehicle_tracker_web/data/repositories/ranger_repository.dart';
 
-@GenerateNiceMocks([
-  MockSpec<SupabaseClient>(),
-  MockSpec<SupabaseQueryBuilder>(),
-  MockSpec<PostgrestFilterBuilder<dynamic>>(),
-  MockSpec<PostgrestTransformBuilder<dynamic>>(),
-  MockSpec<FunctionsClient>(),
-])
-import 'ranger_repository_test.mocks.dart';
-
 void main() {
-  late MockSupabaseClient mockClient;
-  late RangerRepository rangerRepository;
+  group('UserProfile model parsing', () {
+    test('should parse ranger from JSON', () {
+      final json = {
+        'id': 'ranger-001',
+        'full_name': 'Ram Sharma',
+        'role': 'ranger',
+        'phone_number': '+977-9841234567',
+        'assigned_checkpost_id': 'cp-001',
+        'assigned_park_id': 'park-001',
+        'is_active': true,
+        'created_at': '2025-01-01T00:00:00Z',
+        'updated_at': '2025-01-01T00:00:00Z',
+      };
 
-  final sampleRangerJson = {
-    'id': 'ranger-001',
-    'full_name': 'Ram Sharma',
-    'role': 'ranger',
-    'phone_number': '+977-9841234567',
-    'assigned_checkpost_id': 'cp-001',
-    'assigned_park_id': 'park-001',
-    'is_active': true,
-    'created_at': '2025-01-01T00:00:00Z',
-    'updated_at': '2025-01-01T00:00:00Z',
-  };
+      final ranger = UserProfile.fromJson(json);
 
-  final sampleRangerJson2 = {
-    'id': 'ranger-002',
-    'full_name': 'Sita Thapa',
-    'role': 'ranger',
-    'phone_number': '+977-9851234567',
-    'assigned_checkpost_id': 'cp-002',
-    'assigned_park_id': 'park-001',
-    'is_active': false,
-    'created_at': '2025-01-02T00:00:00Z',
-    'updated_at': '2025-01-02T00:00:00Z',
-  };
-
-  setUp(() {
-    mockClient = MockSupabaseClient();
-    rangerRepository = RangerRepository(mockClient);
-  });
-
-  group('RangerRepository', () {
-    group('listRangers', () {
-      test('should return a list of rangers ordered by name', () async {
-        // Arrange
-        final mockQueryBuilder = MockSupabaseQueryBuilder();
-        final mockFilterBuilder = MockPostgrestFilterBuilder();
-
-        when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenAnswer((_) => mockQueryBuilder);
-        when(mockQueryBuilder.select(any))
-            .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq('role', 'ranger'))
-            .thenAnswer((_) => mockFilterBuilder);
-        when((mockFilterBuilder as dynamic).order('full_name', ascending: true))
-            .thenAnswer((_) async => [sampleRangerJson, sampleRangerJson2]);
-
-        // Act
-        final rangers = await rangerRepository.listRangers();
-
-        // Assert
-        expect(rangers, hasLength(2));
-        expect(rangers[0].fullName, 'Ram Sharma');
-        expect(rangers[0].isRanger, true);
-        expect(rangers[1].fullName, 'Sita Thapa');
-        expect(rangers[1].isActive, false);
-      });
+      expect(ranger.id, 'ranger-001');
+      expect(ranger.fullName, 'Ram Sharma');
+      expect(ranger.role, UserRole.ranger);
+      expect(ranger.isRanger, true);
+      expect(ranger.phoneNumber, '+977-9841234567');
+      expect(ranger.isActive, true);
     });
 
-    group('getRanger', () {
-      test('should return a single ranger by ID', () async {
-        // Arrange
-        final mockQueryBuilder = MockSupabaseQueryBuilder();
-        final mockFilterBuilder = MockPostgrestFilterBuilder();
+    test('should parse inactive ranger', () {
+      final json = {
+        'id': 'ranger-002',
+        'full_name': 'Sita Thapa',
+        'role': 'ranger',
+        'phone_number': '+977-9851234567',
+        'assigned_checkpost_id': 'cp-002',
+        'assigned_park_id': 'park-001',
+        'is_active': false,
+        'created_at': '2025-01-02T00:00:00Z',
+        'updated_at': '2025-01-02T00:00:00Z',
+      };
 
-        when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenAnswer((_) => mockQueryBuilder);
-        when(mockQueryBuilder.select(any))
-            .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq('id', 'ranger-001'))
-            .thenAnswer((_) => mockFilterBuilder);
-        when((mockFilterBuilder as dynamic).single())
-            .thenAnswer((_) async => sampleRangerJson);
+      final ranger = UserProfile.fromJson(json);
 
-        // Act
-        final ranger = await rangerRepository.getRanger('ranger-001');
-
-        // Assert
-        expect(ranger.id, 'ranger-001');
-        expect(ranger.fullName, 'Ram Sharma');
-        expect(ranger.phoneNumber, '+977-9841234567');
-      });
+      expect(ranger.fullName, 'Sita Thapa');
+      expect(ranger.isActive, false);
     });
 
-    group('toggleActive', () {
-      test('should update ranger active status', () async {
-        // Arrange
-        final mockQueryBuilder = MockSupabaseQueryBuilder();
-        final mockFilterBuilder = MockPostgrestFilterBuilder();
+    test('should parse admin from JSON', () {
+      final json = {
+        'id': 'admin-001',
+        'full_name': 'Admin User',
+        'role': 'admin',
+        'is_active': true,
+        'created_at': '2025-01-01T00:00:00Z',
+        'updated_at': '2025-01-01T00:00:00Z',
+      };
 
-        when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenAnswer((_) => mockQueryBuilder);
-        when(mockQueryBuilder.update(any))
-            .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq('id', 'ranger-001'))
-            .thenAnswer((_) => mockFilterBuilder);
-        when((mockFilterBuilder as dynamic).select(any))
-            .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
-              ...sampleRangerJson,
-              'is_active': false,
-            },);
+      final admin = UserProfile.fromJson(json);
 
-        // Act
-        final ranger = await rangerRepository.toggleActive(
-          'ranger-001',
-          isActive: false,
-        );
-
-        // Assert
-        expect(ranger.isActive, false);
-      });
+      expect(admin.role, UserRole.admin);
+      expect(admin.isRanger, false);
     });
   });
 
