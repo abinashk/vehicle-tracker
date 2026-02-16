@@ -55,10 +55,11 @@ void main() {
         final mockFilterBuilder = MockPostgrestFilterBuilder();
 
         when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenReturn(mockQueryBuilder);
+            .thenAnswer((_) => mockQueryBuilder);
         when(mockQueryBuilder.select(any))
             .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
+        when(mockFilterBuilder.eq(any, any))
+            .thenAnswer((_) => mockFilterBuilder);
         when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
               'id': 'user-123',
               'full_name': 'Test Ranger',
@@ -107,10 +108,11 @@ void main() {
         final mockFilterBuilder = MockPostgrestFilterBuilder();
 
         when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenReturn(mockQueryBuilder);
+            .thenAnswer((_) => mockQueryBuilder);
         when(mockQueryBuilder.select(any))
             .thenAnswer((_) => mockFilterBuilder as dynamic);
-        when(mockFilterBuilder.eq(any, any)).thenReturn(mockFilterBuilder);
+        when(mockFilterBuilder.eq(any, any))
+            .thenAnswer((_) => mockFilterBuilder);
         when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
               'id': 'admin-123',
               'full_name': 'Admin User',

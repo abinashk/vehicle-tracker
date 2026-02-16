@@ -56,11 +56,11 @@ void main() {
         final mockFilterBuilder = MockPostgrestFilterBuilder();
 
         when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenReturn(mockQueryBuilder);
+            .thenAnswer((_) => mockQueryBuilder);
         when(mockQueryBuilder.select(any))
             .thenAnswer((_) => mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq('role', 'ranger'))
-            .thenReturn(mockFilterBuilder);
+            .thenAnswer((_) => mockFilterBuilder);
         when((mockFilterBuilder as dynamic).order('full_name', ascending: true))
             .thenAnswer((_) async => [sampleRangerJson, sampleRangerJson2]);
 
@@ -83,11 +83,11 @@ void main() {
         final mockFilterBuilder = MockPostgrestFilterBuilder();
 
         when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenReturn(mockQueryBuilder);
+            .thenAnswer((_) => mockQueryBuilder);
         when(mockQueryBuilder.select(any))
             .thenAnswer((_) => mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq('id', 'ranger-001'))
-            .thenReturn(mockFilterBuilder);
+            .thenAnswer((_) => mockFilterBuilder);
         when((mockFilterBuilder as dynamic).single())
             .thenAnswer((_) async => sampleRangerJson);
 
@@ -108,11 +108,11 @@ void main() {
         final mockFilterBuilder = MockPostgrestFilterBuilder();
 
         when(mockClient.from(ApiConstants.userProfilesTable))
-            .thenReturn(mockQueryBuilder);
+            .thenAnswer((_) => mockQueryBuilder);
         when(mockQueryBuilder.update(any))
             .thenAnswer((_) => mockFilterBuilder as dynamic);
         when(mockFilterBuilder.eq('id', 'ranger-001'))
-            .thenReturn(mockFilterBuilder);
+            .thenAnswer((_) => mockFilterBuilder);
         when((mockFilterBuilder as dynamic).select(any))
             .thenAnswer((_) => mockFilterBuilder as dynamic);
         when((mockFilterBuilder as dynamic).single()).thenAnswer((_) async => {
