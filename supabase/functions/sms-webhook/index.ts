@@ -151,30 +151,33 @@ serve(async (req) => {
       params[key] = value.toString();
     });
 
-    // Verify Twilio signature
+    // Verify Twilio signature - REQUIRED, never skip
     const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
-    if (twilioAuthToken) {
-      const twilioSignature = req.headers.get('X-Twilio-Signature');
-      if (!twilioSignature) {
-        console.error('Missing X-Twilio-Signature header');
-        return twimlResponse('Unauthorized');
-      }
+    if (!twilioAuthToken) {
+      console.error('TWILIO_AUTH_TOKEN env var is not set - rejecting request');
+      return twimlResponse('Server configuration error');
+    }
 
-      // Reconstruct the request URL for signature verification
-      const requestUrl = new URL(req.url);
-      const validationUrl = requestUrl.toString();
+    const twilioSignature = req.headers.get('X-Twilio-Signature');
+    if (!twilioSignature) {
+      console.error('Missing X-Twilio-Signature header');
+      return twimlResponse('Unauthorized');
+    }
 
-      const isValid = await verifyTwilioSignature(
-        twilioSignature,
-        validationUrl,
-        params,
-        twilioAuthToken,
-      );
+    // Reconstruct the request URL for signature verification
+    const requestUrl = new URL(req.url);
+    const validationUrl = requestUrl.toString();
 
-      if (!isValid) {
-        console.error('Invalid Twilio signature');
-        return twimlResponse('Unauthorized');
-      }
+    const isValid = await verifyTwilioSignature(
+      twilioSignature,
+      validationUrl,
+      params,
+      twilioAuthToken,
+    );
+
+    if (!isValid) {
+      console.error('Invalid Twilio signature');
+      return twimlResponse('Unauthorized');
     }
 
     // Extract SMS body
@@ -221,7 +224,11 @@ serve(async (req) => {
       return twimlResponse(`Error: No ranger found with phone suffix "${parsed.rangerPhoneSuffix}".`);
     }
 
-    // Use the first matching ranger
+    if (rangers.length > 1) {
+      console.error(`Ambiguous ranger lookup: ${rangers.length} rangers match phone suffix "${parsed.rangerPhoneSuffix}"`);
+      return twimlResponse(`Error: Multiple rangers match phone suffix "${parsed.rangerPhoneSuffix}". Contact admin.`);
+    }
+
     const rangerId = rangers[0].id;
 
     // Map vehicle type from SMS parser output to DB-compatible value
@@ -230,8 +237,9 @@ serve(async (req) => {
     // Generate deterministic client_id from the SMS content for idempotency
     const clientId = await generateDeterministicId(smsBody.trim());
 
-    // Insert into vehicle_passages with ON CONFLICT (client_id) DO NOTHING
-    const { data: passage, error: insertError } = await supabase
+    // Insert into vehicle_passages with ON CONFLICT (client_id) DO NOTHING.
+    // Don't use .single() since ignoreDuplicates returns no rows on conflict.
+    const { data: passages, error: insertError } = await supabase
       .from('vehicle_passages')
       .upsert(
         {
@@ -249,15 +257,19 @@ serve(async (req) => {
           ignoreDuplicates: true,
         },
       )
-      .select('id')
-      .single();
+      .select('id');
 
     if (insertError) {
       console.error('Insert error:', insertError.message);
       return twimlResponse('Error: Failed to record passage.');
     }
 
-    console.log(`SMS passage recorded: ${passage?.id} for plate ${parsed.plateNumber} at ${parsed.checkpostCode}`);
+    const passage = passages?.[0];
+    if (passage) {
+      console.log(`SMS passage recorded: ${passage.id} for plate ${parsed.plateNumber} at ${parsed.checkpostCode}`);
+    } else {
+      console.log(`SMS passage deduplicated (already exists) for plate ${parsed.plateNumber} at ${parsed.checkpostCode}`);
+    }
     return twimlResponse(`OK: ${parsed.plateNumber} recorded at ${parsed.checkpostCode}.`);
   } catch (err) {
     // Always return 200 with TwiML to Twilio, even on unexpected errors
