@@ -1,5 +1,16 @@
-import { getServiceClient } from "./client.ts";
+import { createClient } from "@supabase/supabase-js";
+import { getServiceClient, SUPABASE_URL, SUPABASE_ANON_KEY } from "./client.ts";
 import { SEED } from "./data.ts";
+
+/**
+ * Create a fresh anon client for sign-in.
+ * Using a separate client avoids interference with the service_role client's session.
+ */
+function getSignInClient() {
+  return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
 
 /**
  * Creates a test admin user and returns their ID and JWT
@@ -39,8 +50,9 @@ export async function createTestAdmin(
     throw new Error(`Failed to create admin profile: ${profileError.message}`);
   }
 
-  // Sign in to get JWT
-  const { data: signInData, error: signInError } = await serviceClient.auth
+  // Sign in with a separate anon client to get a proper user JWT
+  const anonClient = getSignInClient();
+  const { data: signInData, error: signInError } = await anonClient.auth
     .signInWithPassword({
       email,
       password,
@@ -101,8 +113,9 @@ export async function createTestRanger(
     throw new Error(`Failed to create ranger profile: ${profileError.message}`);
   }
 
-  // Sign in to get JWT
-  const { data: signInData, error: signInError } = await serviceClient.auth
+  // Sign in with a separate anon client to get a proper user JWT
+  const anonClient = getSignInClient();
+  const { data: signInData, error: signInError } = await anonClient.auth
     .signInWithPassword({
       email,
       password,
