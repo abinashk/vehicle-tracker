@@ -44,6 +44,14 @@ enabled = true
 policy = "per_worker"
 inspector_port = 8083
 
+# Kong's JWT plugin only supports HS256 but GoTrue signs user JWTs with ES256.
+# Disable Kong JWT verification — each function validates auth via auth.getUser().
+[functions.create-ranger]
+verify_jwt = false
+
+[functions.match-passage]
+verify_jwt = false
+
 # SMS webhook receives Twilio POST — no JWT available, uses Twilio signature instead.
 [functions.sms-webhook]
 verify_jwt = false

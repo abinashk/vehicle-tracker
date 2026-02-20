@@ -1,5 +1,5 @@
 import { assertEquals, assertExists, assert } from 'https://deno.land/std@0.220.0/assert/mod.ts'
-import { getServiceClient, getUserClient, SUPABASE_ANON_KEY } from '../helpers/client.ts'
+import { getServiceClient, getUserClient, SUPABASE_URL, SUPABASE_ANON_KEY } from '../helpers/client.ts'
 import { createTestAdmin, createTestRanger, cleanupUsers } from '../helpers/users.ts'
 import { SEED, generateClientId, passage } from '../helpers/data.ts'
 import { cleanup } from '../helpers/cleanup.ts'
@@ -12,22 +12,29 @@ Deno.test("Admin can create ranger via edge function", async () => {
     const admin = await createTestAdmin()
     testUsers.push(admin.id)
 
-    // Use Supabase client's functions.invoke() which handles auth correctly
-    const adminClient = getUserClient(admin.jwt)
-
     const rangerUsername = `e2e_ranger_${Date.now()}`
-    const { data, error } = await adminClient.functions.invoke('create-ranger', {
-      body: {
+
+    // Use raw fetch for better error diagnostics
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/create-ranger`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${admin.jwt}`,
+        'apikey': SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         username: rangerUsername,
         password: 'securepass123!',
         full_name: 'E2E Ranger',
         assigned_checkpost_id: SEED.checkposts.east.id,
         assigned_park_id: SEED.park.id,
-      },
+      }),
     })
 
-    assertEquals(error, null, `Should not error: ${error?.message}`)
-    assertExists(data, 'Response should contain data')
+    const body = await response.text()
+    assertEquals(response.status, 201, `Expected 201, got ${response.status}: ${body}`)
+
+    const data = JSON.parse(body)
     assertExists(data.user, 'Response should contain user')
     assertEquals(data.user.role, 'ranger', 'Created user should have role=ranger')
 
