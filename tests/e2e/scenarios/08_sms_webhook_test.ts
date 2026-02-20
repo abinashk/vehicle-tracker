@@ -44,7 +44,7 @@ Deno.test("SMS webhook creates passage with source=sms", async () => {
   try {
     // Create test ranger with phone number ending in "5678"
     const ranger = await createTestRanger(SEED.checkposts.east.id, '+9779845675678')
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     const plateNumber = `SMS${Date.now()}`
     testPlates.push(plateNumber)

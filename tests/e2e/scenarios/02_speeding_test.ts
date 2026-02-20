@@ -11,7 +11,7 @@ Deno.test("Speeding: fast travel creates speeding violation", async () => {
   try {
     // Create test ranger
     const ranger = await createTestRanger(SEED.checkposts.east.id)
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     // Generate unique plate
     const plateNumber = `SPEED-${Date.now()}`
@@ -30,7 +30,7 @@ Deno.test("Speeding: fast travel creates speeding violation", async () => {
         vehicle_type: 'car',
         recorded_at: entryTime.toISOString(),
         source: 'mobile',
-        ranger_id: ranger.userId,
+        ranger_id: ranger.id,
       })
       .select()
       .single()
@@ -49,7 +49,7 @@ Deno.test("Speeding: fast travel creates speeding violation", async () => {
         vehicle_type: 'car',
         recorded_at: exitTime.toISOString(),
         source: 'mobile',
-        ranger_id: ranger.userId,
+        ranger_id: ranger.id,
       })
       .select()
       .single()

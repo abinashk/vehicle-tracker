@@ -61,10 +61,10 @@ export async function createTestAdmin(
  */
 export async function createTestRanger(
   checkpostId: string,
-  suffix?: string,
+  phoneNumber?: string,
 ): Promise<{ id: string; jwt: string }> {
   const serviceClient = getServiceClient();
-  const email = `test_ranger_${suffix || Date.now()}@bnp.local`;
+  const email = `test_ranger_${Date.now()}@bnp.local`;
   const password = "testpass123!";
 
   // Create user via auth.admin
@@ -82,15 +82,20 @@ export async function createTestRanger(
   const userId = userData.user.id;
 
   // Insert user profile
+  const profileData: Record<string, unknown> = {
+    user_id: userId,
+    role: "ranger",
+    full_name: "Test Ranger",
+    assigned_checkpost_id: checkpostId,
+    assigned_park_id: SEED.park.id,
+  };
+  if (phoneNumber) {
+    profileData.phone_number = phoneNumber;
+  }
+
   const { error: profileError } = await serviceClient
     .from("user_profiles")
-    .insert({
-      user_id: userId,
-      role: "ranger",
-      full_name: "Test Ranger",
-      assigned_checkpost_id: checkpostId,
-      assigned_park_id: SEED.park.id,
-    });
+    .insert(profileData);
 
   if (profileError) {
     throw new Error(`Failed to create ranger profile: ${profileError.message}`);

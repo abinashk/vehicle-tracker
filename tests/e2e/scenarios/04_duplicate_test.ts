@@ -11,7 +11,7 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
   try {
     // Create test ranger
     const ranger = await createTestRanger(SEED.checkposts.east.id)
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     // Generate unique plate and fixed client_id
     const plateNumber = `DUP-${Date.now()}`
@@ -30,7 +30,7 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
         source: 'mobile',
-        ranger_id: ranger.userId,
+        ranger_id: ranger.id,
       })
       .select()
       .single()
@@ -49,7 +49,7 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
         source: 'mobile',
-        ranger_id: ranger.userId,
+        ranger_id: ranger.id,
       })
 
     // Should not error due to conflict handling

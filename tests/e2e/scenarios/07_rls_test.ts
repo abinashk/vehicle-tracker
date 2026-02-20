@@ -11,7 +11,7 @@ Deno.test("Ranger can insert passage at assigned checkpost", async () => {
   try {
     // Create test ranger assigned to east gate, get JWT
     const ranger = await createTestRanger(SEED.checkposts.east.id)
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     const plateNumber = `RLS-INSERT-${Date.now()}`
     testPlates.push(plateNumber)
@@ -48,7 +48,7 @@ Deno.test("Ranger can read passages from own segment", async () => {
   try {
     // Create ranger
     const ranger = await createTestRanger(SEED.checkposts.east.id)
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     const plateNumber = `RLS-READ-${Date.now()}`
     testPlates.push(plateNumber)
@@ -64,7 +64,7 @@ Deno.test("Ranger can read passages from own segment", async () => {
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
         source: 'mobile',
-        ranger_id: ranger.userId,
+        ranger_id: ranger.id,
       })
       .select()
       .single()
@@ -96,10 +96,10 @@ Deno.test("Admin can read all passages", async () => {
   try {
     // Create admin + ranger
     const admin = await createTestAdmin()
-    testUsers.push(admin.userId)
+    testUsers.push(admin.id)
 
     const ranger = await createTestRanger(SEED.checkposts.east.id)
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     const plateNumber = `RLS-ADMIN-${Date.now()}`
     testPlates.push(plateNumber)
@@ -115,7 +115,7 @@ Deno.test("Admin can read all passages", async () => {
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
         source: 'mobile',
-        ranger_id: ranger.userId,
+        ranger_id: ranger.id,
       })
       .select()
       .single()

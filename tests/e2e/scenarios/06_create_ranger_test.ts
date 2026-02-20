@@ -10,7 +10,7 @@ Deno.test("Admin can create ranger via edge function", async () => {
   try {
     // Create test admin, get JWT
     const admin = await createTestAdmin()
-    testUsers.push(admin.userId)
+    testUsers.push(admin.id)
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || 'http://127.0.0.1:54321'
 
@@ -53,7 +53,7 @@ Deno.test("Non-admin cannot create ranger", async () => {
   try {
     // Create test ranger (not admin), get JWT
     const ranger = await createTestRanger(SEED.checkposts.east.id)
-    testUsers.push(ranger.userId)
+    testUsers.push(ranger.id)
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || 'http://127.0.0.1:54321'
 

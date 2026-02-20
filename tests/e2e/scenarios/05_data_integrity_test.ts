@@ -38,7 +38,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
   try {
     // Create test admin
     const admin = await createTestAdmin()
-    testUsers.push(admin.userId)
+    testUsers.push(admin.id)
 
     const supabase = getServiceClient()
 
@@ -46,7 +46,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
     const { data: profile1, error: error1 } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', admin.userId)
+      .eq('id', admin.id)
       .single()
 
     assertEquals(error1, null, 'Should query profile without error')
@@ -60,7 +60,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
     const { error: updateError } = await supabase
       .from('profiles')
       .update({ full_name: 'Updated Name' })
-      .eq('id', admin.userId)
+      .eq('id', admin.id)
 
     assertEquals(updateError, null, 'Should update profile without error')
 
@@ -68,7 +68,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
     const { data: profile2, error: error2 } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', admin.userId)
+      .eq('id', admin.id)
       .single()
 
     assertEquals(error2, null, 'Should query profile without error')
