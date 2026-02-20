@@ -164,9 +164,10 @@ serve(async (req) => {
       return twimlResponse('Unauthorized');
     }
 
-    // Reconstruct the request URL for signature verification
-    const requestUrl = new URL(req.url);
-    const validationUrl = requestUrl.toString();
+    // Use configured webhook URL for signature verification.
+    // In Docker/CI, req.url is the internal runtime URL which differs from the
+    // external URL that Twilio (or tests) use to compute the signature.
+    const validationUrl = Deno.env.get('SMS_WEBHOOK_URL') || new URL(req.url).toString();
 
     const isValid = await verifyTwilioSignature(
       twilioSignature,

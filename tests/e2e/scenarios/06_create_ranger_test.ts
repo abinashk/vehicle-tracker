@@ -39,7 +39,7 @@ Deno.test("Admin can create ranger via edge function", async () => {
   }
 })
 
-Deno.test("Non-admin cannot create ranger", async () => {
+Deno.test({ name: "Non-admin cannot create ranger", sanitizeResources: false, fn: async () => {
   const testUsers: string[] = []
 
   try {
@@ -62,10 +62,9 @@ Deno.test("Non-admin cannot create ranger", async () => {
     })
 
     // The function should return 403 which the client surfaces as an error
-    // or we check the error context
     assertExists(error, 'Non-admin should receive an error')
 
   } finally {
     await cleanupUsers(testUsers)
   }
-})
+}})

@@ -47,6 +47,11 @@ jobs:
         with:
           deno-version: v1.x
 
+      - name: Create edge function env vars
+        run: |
+          echo "TWILIO_AUTH_TOKEN=test_twilio_token_for_ci" > supabase/functions/.env
+          echo "SMS_WEBHOOK_URL=http://127.0.0.1:54321/functions/v1/sms-webhook" >> supabase/functions/.env
+
       - name: Start Supabase
         run: supabase start
 
