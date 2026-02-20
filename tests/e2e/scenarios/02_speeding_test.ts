@@ -22,14 +22,15 @@ Deno.test("Speeding: fast travel creates speeding violation", async () => {
     // Insert entry passage at east gate (30 minutes ago - faster than allowed)
     const entryTime = new Date(Date.now() - 30 * 60 * 1000)
     const { data: entryPassage, error: entryError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.east.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: entryTime.toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
       .select()
@@ -41,14 +42,15 @@ Deno.test("Speeding: fast travel creates speeding violation", async () => {
     // Insert exit passage at west gate (now - travel time = 30 min < 67.5 threshold)
     const exitTime = new Date()
     const { data: exitPassage, error: exitError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.west.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: exitTime.toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
       .select()

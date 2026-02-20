@@ -94,7 +94,7 @@ Deno.test("SMS webhook creates passage with source=sms", async () => {
     await new Promise(resolve => setTimeout(resolve, 500))
 
     const { data: passages, error: queryError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .select('*')
       .eq('source', 'sms')
       .eq('plate_number', plateNumber)

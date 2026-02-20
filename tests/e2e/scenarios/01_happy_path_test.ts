@@ -22,14 +22,15 @@ Deno.test("Happy path: normal travel time produces no violation", async () => {
     // Insert entry passage at east gate (120 minutes ago)
     const entryTime = new Date(Date.now() - 120 * 60 * 1000)
     const { data: entryPassage, error: entryError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.east.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: entryTime.toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
       .select()
@@ -41,14 +42,15 @@ Deno.test("Happy path: normal travel time produces no violation", async () => {
     // Insert exit passage at west gate (now)
     const exitTime = new Date()
     const { data: exitPassage, error: exitError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.west.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: exitTime.toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
       .select()
@@ -62,7 +64,7 @@ Deno.test("Happy path: normal travel time produces no violation", async () => {
 
     // Query both passages to verify they are matched
     const { data: passages, error: passagesError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .select('*')
       .eq('plate_number', plateNumber)
       .order('recorded_at', { ascending: true })

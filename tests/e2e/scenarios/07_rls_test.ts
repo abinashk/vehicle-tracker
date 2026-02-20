@@ -19,14 +19,15 @@ Deno.test("Ranger can insert passage at assigned checkpost", async () => {
     // Use getUserClient(jwt) to insert passage at east gate
     const rangerClient = getUserClient(ranger.jwt)
     const { data: passage, error: insertError } = await rangerClient
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.east.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
-        source: 'mobile',
+        source: 'app',
+        segment_id: SEED.segment.id,
       })
       .select()
       .single()
@@ -56,15 +57,16 @@ Deno.test("Ranger can read passages from own segment", async () => {
     // Insert passage using service client
     const supabase = getServiceClient()
     const { data: passage, error: insertError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.east.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
+        segment_id: SEED.segment.id,
       })
       .select()
       .single()
@@ -75,7 +77,7 @@ Deno.test("Ranger can read passages from own segment", async () => {
     // Query passages as ranger
     const rangerClient = getUserClient(ranger.jwt)
     const { data: passages, error: queryError } = await rangerClient
-      .from('passages')
+      .from('vehicle_passages')
       .select('*')
       .eq('plate_number', plateNumber)
 
@@ -107,15 +109,16 @@ Deno.test("Admin can read all passages", async () => {
     // Insert passage
     const supabase = getServiceClient()
     const { data: passage, error: insertError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.east.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
+        segment_id: SEED.segment.id,
       })
       .select()
       .single()
@@ -126,7 +129,7 @@ Deno.test("Admin can read all passages", async () => {
     // Query passages as admin
     const adminClient = getUserClient(admin.jwt)
     const { data: passages, error: queryError } = await adminClient
-      .from('passages')
+      .from('vehicle_passages')
       .select('*')
       .eq('plate_number', plateNumber)
 

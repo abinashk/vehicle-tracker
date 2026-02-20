@@ -29,7 +29,7 @@ export async function createTestAdmin(
   const { error: profileError } = await serviceClient
     .from("user_profiles")
     .insert({
-      user_id: userId,
+      id: userId,
       role: "admin",
       full_name: "Test Admin",
       assigned_park_id: SEED.park.id,
@@ -83,7 +83,7 @@ export async function createTestRanger(
 
   // Insert user profile
   const profileData: Record<string, unknown> = {
-    user_id: userId,
+    id: userId,
     role: "ranger",
     full_name: "Test Ranger",
     assigned_checkpost_id: checkpostId,

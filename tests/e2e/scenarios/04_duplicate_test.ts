@@ -22,14 +22,15 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
 
     // Insert passage with this clientId - should succeed
     const { data: firstPassage, error: firstError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: fixedClientId,
         checkpost_id: SEED.checkposts.east.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
       .select()
@@ -41,14 +42,15 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
     // Insert SAME passage again with same clientId
     // This should NOT error (upsert behavior or conflict ignore)
     const { error: secondError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: fixedClientId,
         checkpost_id: SEED.checkposts.east.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: new Date().toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
 
@@ -57,7 +59,7 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
 
     // Query passages where client_id = fixedId
     const { data: passages, error: queryError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .select('*')
       .eq('client_id', fixedClientId)
 

@@ -9,7 +9,7 @@ Deno.test("Generated columns: segment has correct calculated travel times", asyn
 
   // Query seed segment
   const { data: segment, error: segmentError } = await supabase
-    .from('segments')
+    .from('highway_segments')
     .select('*')
     .eq('id', SEED.segment.id)
     .single()
@@ -44,7 +44,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
 
     // Query their profile, note updated_at
     const { data: profile1, error: error1 } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('*')
       .eq('id', admin.id)
       .single()
@@ -58,7 +58,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
 
     // Update profile (e.g. full_name)
     const { error: updateError } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .update({ full_name: 'Updated Name' })
       .eq('id', admin.id)
 
@@ -66,7 +66,7 @@ Deno.test("Updated_at trigger fires on profile update", async () => {
 
     // Query again - assert updated_at changed
     const { data: profile2, error: error2 } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('*')
       .eq('id', admin.id)
       .single()

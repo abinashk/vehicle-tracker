@@ -22,14 +22,15 @@ Deno.test("Overstay: unmatched entry past max time triggers alert via check-over
     // Insert entry at east gate (300 minutes ago = 5 hours, past 270 min max)
     const entryTime = new Date(Date.now() - 300 * 60 * 1000)
     const { data: entryPassage, error: entryError } = await supabase
-      .from('passages')
+      .from('vehicle_passages')
       .insert({
         client_id: generateClientId(),
         checkpost_id: SEED.checkposts.east.id,
+        segment_id: SEED.segment.id,
         plate_number: plateNumber,
         vehicle_type: 'car',
         recorded_at: entryTime.toISOString(),
-        source: 'mobile',
+        source: 'app',
         ranger_id: ranger.id,
       })
       .select()
