@@ -28,12 +28,13 @@ Deno.test("Ranger can insert passage at assigned checkpost", async () => {
         recorded_at: new Date().toISOString(),
         source: 'app',
         segment_id: SEED.segment.id,
+        ranger_id: ranger.id,
       })
       .select()
       .single()
 
     // Assert insert succeeds (no error)
-    assertEquals(insertError, null, 'Ranger should be able to insert passage at assigned checkpost')
+    assertEquals(insertError, null, `Ranger should be able to insert passage at assigned checkpost: ${insertError?.message}`)
     assertExists(passage, 'Passage should be created')
 
   } finally {

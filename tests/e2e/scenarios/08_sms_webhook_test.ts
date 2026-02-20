@@ -84,14 +84,14 @@ Deno.test("SMS webhook creates passage with source=sms", async () => {
       body: formData,
     })
 
+    // Consume response body (TwiML XML)
+    const responseBody = await response.text()
+
     // Assert response status = 200
-    assertEquals(response.status, 200, `SMS webhook should return 200, got ${response.status}`)
+    assertEquals(response.status, 200, `SMS webhook should return 200, got ${response.status}: ${responseBody}`)
 
     // Use service client to query passages where source = 'sms' and plate_number matches
     const supabase = getServiceClient()
-
-    // Wait a bit for the webhook to process
-    await new Promise(resolve => setTimeout(resolve, 500))
 
     const { data: passages, error: queryError } = await supabase
       .from('vehicle_passages')

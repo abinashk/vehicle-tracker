@@ -44,5 +44,9 @@ enabled = true
 policy = "per_worker"
 inspector_port = 8083
 
+# SMS webhook receives Twilio POST — no JWT available, uses Twilio signature instead.
+[functions.sms-webhook]
+verify_jwt = false
+
 [analytics]
 enabled = false

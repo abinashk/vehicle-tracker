@@ -40,7 +40,7 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
     assertExists(firstPassage, 'First passage should exist')
 
     // Insert SAME passage again with same clientId
-    // This should NOT error (upsert behavior or conflict ignore)
+    // UNIQUE constraint on client_id prevents duplicate — returns error code 23505
     const { error: secondError } = await supabase
       .from('vehicle_passages')
       .insert({
@@ -54,10 +54,11 @@ Deno.test("Duplicate: same client_id inserted twice results in one row", async (
         ranger_id: ranger.id,
       })
 
-    // Should not error due to conflict handling
-    assertEquals(secondError, null, 'Second insert with same client_id should not error')
+    // Expect unique constraint violation (23505)
+    assertExists(secondError, 'Second insert should return an error')
+    assertEquals(secondError.code, '23505', 'Error should be unique constraint violation')
 
-    // Query passages where client_id = fixedId
+    // Query passages where client_id = fixedId — should still be just 1 row
     const { data: passages, error: queryError } = await supabase
       .from('vehicle_passages')
       .select('*')

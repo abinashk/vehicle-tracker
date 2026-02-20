@@ -56,7 +56,8 @@ Deno.test("Overstay: unmatched entry past max time triggers alert via check-over
       },
     })
 
-    assert(response.ok, `check-overstay should return 200, got ${response.status}`)
+    const responseBody = await response.text()
+    assert(response.ok, `check-overstay should return 200, got ${response.status}: ${responseBody}`)
 
     // Query proactive_overstay_alerts for this plate
     const { data: alerts, error: alertsError } = await supabase
@@ -80,7 +81,8 @@ Deno.test("Overstay: unmatched entry past max time triggers alert via check-over
       },
     })
 
-    assert(response2.ok, 'Second check-overstay call should succeed')
+    const response2Body = await response2.text()
+    assert(response2.ok, `Second check-overstay call should succeed: ${response2Body}`)
 
     // Query alerts again - should still be 1 (no new alert created)
     const { data: alertsAfter, error: alertsAfterError } = await supabase

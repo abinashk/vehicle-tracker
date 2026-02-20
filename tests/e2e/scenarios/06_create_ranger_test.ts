@@ -1,5 +1,5 @@
 import { assertEquals, assertExists, assert } from 'https://deno.land/std@0.220.0/assert/mod.ts'
-import { getServiceClient, getUserClient } from '../helpers/client.ts'
+import { getServiceClient, getUserClient, SUPABASE_ANON_KEY } from '../helpers/client.ts'
 import { createTestAdmin, createTestRanger, cleanupUsers } from '../helpers/users.ts'
 import { SEED, generateClientId, passage } from '../helpers/data.ts'
 import { cleanup } from '../helpers/cleanup.ts'
@@ -20,6 +20,7 @@ Deno.test("Admin can create ranger via edge function", async () => {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${admin.jwt}`,
+        'apikey': SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -32,15 +33,15 @@ Deno.test("Admin can create ranger via edge function", async () => {
     })
 
     // Assert response status = 201
-    assertEquals(response.status, 201, 'Should return 201 Created')
+    const responseData = await response.json()
+    assertEquals(response.status, 201, `Should return 201 Created, got ${response.status}: ${JSON.stringify(responseData)}`)
 
     // Parse response body
-    const responseData = await response.json()
-    assertExists(responseData.profile, 'Response should contain profile')
-    assertEquals(responseData.profile.role, 'ranger', 'Created user should have role=ranger')
+    assertExists(responseData.user, 'Response should contain user')
+    assertEquals(responseData.user.role, 'ranger', 'Created user should have role=ranger')
 
     // Store created user id for cleanup
-    testUsers.push(responseData.profile.id)
+    testUsers.push(responseData.user.id)
 
   } finally {
     await cleanupUsers(testUsers)
@@ -63,6 +64,7 @@ Deno.test("Non-admin cannot create ranger", async () => {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${ranger.jwt}`,
+        'apikey': SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -73,6 +75,9 @@ Deno.test("Non-admin cannot create ranger", async () => {
         assigned_park_id: SEED.park.id,
       }),
     })
+
+    // Consume response body to avoid leak
+    await response.text()
 
     // Assert response status = 403
     assertEquals(response.status, 403, 'Non-admin should receive 403 Forbidden')
