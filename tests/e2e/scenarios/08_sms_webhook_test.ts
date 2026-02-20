@@ -1,5 +1,5 @@
 import { assertEquals, assertExists, assert } from 'https://deno.land/std@0.220.0/assert/mod.ts'
-import { getServiceClient, getUserClient } from '../helpers/client.ts'
+import { getServiceClient, getUserClient, SUPABASE_ANON_KEY } from '../helpers/client.ts'
 import { createTestAdmin, createTestRanger, cleanupUsers } from '../helpers/users.ts'
 import { SEED, generateClientId, passage } from '../helpers/data.ts'
 import { cleanup } from '../helpers/cleanup.ts'
@@ -79,6 +79,7 @@ Deno.test("SMS webhook creates passage with source=sms", async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         'X-Twilio-Signature': signature,
       },
       body: formData,
