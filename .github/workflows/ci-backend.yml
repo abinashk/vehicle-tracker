@@ -61,7 +61,7 @@ jobs:
           echo "TWILIO_AUTH_TOKEN=test_twilio_token_for_ci" >> $GITHUB_ENV
 
       - name: Run integration tests
-        run: deno test tests/e2e/ --allow-net --allow-env --allow-read
+        run: deno test --config tests/e2e/deno.json tests/e2e/ --allow-net --allow-env --allow-read
 
       - name: Stop Supabase
         if: always()
