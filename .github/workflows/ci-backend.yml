@@ -4,10 +4,12 @@ on:
   push:
     paths:
       - 'supabase/**'
+      - 'tests/e2e/**'
       - '.github/workflows/ci-backend.yml'
   pull_request:
     paths:
       - 'supabase/**'
+      - 'tests/e2e/**'
       - '.github/workflows/ci-backend.yml'
 
 jobs:
@@ -28,6 +30,41 @@ jobs:
         run: supabase db reset
 
       - name: Stop Supabase
+        run: supabase stop
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: validate-migrations
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Reset database with seed data
+        run: supabase db reset
+
+      - name: Export Supabase credentials
+        run: |
+          echo "SUPABASE_URL=http://127.0.0.1:54321" >> $GITHUB_ENV
+          echo "SUPABASE_ANON_KEY=$(supabase status -o json | jq -r '.ANON_KEY')" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=$(supabase status -o json | jq -r '.SERVICE_ROLE_KEY')" >> $GITHUB_ENV
+          echo "TWILIO_AUTH_TOKEN=test_twilio_token_for_ci" >> $GITHUB_ENV
+
+      - name: Run integration tests
+        run: deno test tests/e2e/ --allow-net --allow-env --allow-read
+
+      - name: Stop Supabase
+        if: always()
         run: supabase stop
 
   lint-edge-functions:
