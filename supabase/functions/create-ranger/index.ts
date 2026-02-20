@@ -80,7 +80,10 @@ serve(async (req) => {
     }
 
     // Verify the caller is authenticated
-    const { data: { user: caller }, error: authError } = await userClient.auth.getUser();
+    // Pass JWT explicitly — auth.getUser() without args uses internal session state
+    // which is empty when the client is created with only global headers.
+    const token = req.headers.get('Authorization')?.replace('Bearer ', '') ?? '';
+    const { data: { user: caller }, error: authError } = await userClient.auth.getUser(token);
     if (authError || !caller) {
       return new Response(
         JSON.stringify({ error: 'Invalid or expired token' }),
