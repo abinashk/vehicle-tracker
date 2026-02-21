@@ -18,7 +18,7 @@ class AlertRepository {
     final data = await _client
         .from(ApiConstants.proactiveOverstayAlertsTable)
         .select()
-        .eq('is_resolved', false)
+        .eq('resolved', false)
         .order('entry_time', ascending: true);
 
     return (data as List).map((e) => ProactiveAlert.fromJson(e)).toList();
@@ -49,7 +49,7 @@ class AlertRepository {
     final data = await _client
         .from(ApiConstants.proactiveOverstayAlertsTable)
         .update({
-          'is_resolved': true,
+          'resolved': true,
           'resolved_by': resolvedBy,
           'resolved_notes': notes,
           'resolved_at': DateTime.now().toUtc().toIso8601String(),
@@ -132,7 +132,7 @@ class AlertRepository {
 
     if (existing != null) {
       await _client.from(ApiConstants.proactiveOverstayAlertsTable).update({
-        'is_resolved': true,
+        'resolved': true,
         'resolved_by': resolvedBy,
         'resolved_notes': notes,
         'resolved_at': DateTime.now().toUtc().toIso8601String(),
@@ -146,7 +146,7 @@ class AlertRepository {
         'checkpost_id': '',
         'entry_time': DateTime.now().toUtc().toIso8601String(),
         'max_travel_time_minutes': 0,
-        'is_resolved': true,
+        'resolved': true,
         'resolved_by': resolvedBy,
         'resolved_notes': notes,
         'resolved_at': DateTime.now().toUtc().toIso8601String(),
