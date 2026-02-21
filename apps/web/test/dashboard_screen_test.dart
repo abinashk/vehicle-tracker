@@ -136,7 +136,7 @@ void main() {
         'checkpost_id': 'cp-001',
         'entry_time': '2025-06-15T10:00:00Z',
         'max_travel_time_minutes': 30.0,
-        'is_resolved': false,
+        'resolved': false,
         'created_at': '2025-06-15T10:35:00Z',
       };
 
@@ -158,7 +158,7 @@ void main() {
         'checkpost_id': 'cp-002',
         'entry_time': '2025-06-15T08:00:00Z',
         'max_travel_time_minutes': 60.0,
-        'is_resolved': true,
+        'resolved': true,
         'resolved_by': 'admin-001',
         'resolved_notes': 'Vehicle parked at lodge',
         'resolved_at': '2025-06-15T12:00:00Z',

@@ -75,7 +75,7 @@ class ProactiveAlert {
       checkpostId: json['checkpost_id'] as String,
       entryTime: DateTime.parse(json['entry_time'] as String),
       maxTravelTimeMinutes: (json['max_travel_time_minutes'] as num).toDouble(),
-      isResolved: json['is_resolved'] as bool? ?? false,
+      isResolved: json['resolved'] as bool? ?? false,
       resolvedBy: json['resolved_by'] as String?,
       resolvedNotes: json['resolved_notes'] as String?,
       resolvedAt: json['resolved_at'] != null
@@ -163,7 +163,7 @@ class DashboardRepository {
     final data = await _client
         .from(ApiConstants.proactiveOverstayAlertsTable)
         .select()
-        .eq('is_resolved', false)
+        .eq('resolved', false)
         .order('created_at', ascending: false);
 
     return (data as List).map((e) => ProactiveAlert.fromJson(e)).toList();
@@ -275,7 +275,7 @@ class DashboardRepository {
     final response = await _client
         .from(ApiConstants.proactiveOverstayAlertsTable)
         .select('id')
-        .eq('is_resolved', false)
+        .eq('resolved', false)
         .count(CountOption.exact);
 
     return response.count;

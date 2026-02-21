@@ -49,7 +49,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   void dispose() {
     _refreshTimer?.cancel();
-    _unsubscribeRealtime();
+    // Remove channels directly — cannot use ref.read() during dispose.
+    final client = Supabase.instance.client;
+    if (_violationsChannel != null) {
+      client.removeChannel(_violationsChannel!);
+    }
+    if (_alertsChannel != null) {
+      client.removeChannel(_alertsChannel!);
+    }
     super.dispose();
   }
 
@@ -139,15 +146,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Future<void> _unsubscribeRealtime() async {
-    final dashboardRepo = ref.read(dashboardRepositoryProvider);
-    if (_violationsChannel != null) {
-      await dashboardRepo.unsubscribe(_violationsChannel!);
-    }
-    if (_alertsChannel != null) {
-      await dashboardRepo.unsubscribe(_alertsChannel!);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,57 +232,66 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final summary = _summary;
     if (summary == null) return const SizedBox.shrink();
 
+    final cards = [
+      StatCard(
+        key: const ValueKey('passages'),
+        label: 'Passages Today',
+        value: summary.totalPassagesToday.toString(),
+        icon: Icons.directions_car,
+        iconColor: Colors.blue,
+        onTap: () => context.go(RoutePaths.passages),
+      ),
+      StatCard(
+        key: const ValueKey('speeding'),
+        label: 'Speeding',
+        value: summary.speedingViolationsToday.toString(),
+        icon: Icons.speed,
+        iconColor: AppTheme.errorColor,
+        onTap: () => context.go(RoutePaths.violations),
+      ),
+      StatCard(
+        key: const ValueKey('overstay'),
+        label: 'Overstay',
+        value: summary.overstayViolationsToday.toString(),
+        icon: Icons.timer_off,
+        iconColor: AppTheme.warningColor,
+        onTap: () => context.go(RoutePaths.violations),
+      ),
+      StatCard(
+        key: const ValueKey('unmatched'),
+        label: 'Unmatched',
+        value: summary.unmatchedCount.toString(),
+        icon: Icons.help_outline,
+        iconColor: Colors.orange,
+        onTap: () => context.go(RoutePaths.unmatched),
+      ),
+      StatCard(
+        key: const ValueKey('alerts'),
+        label: 'Active Alerts',
+        value: summary.activeAlertsCount.toString(),
+        icon: Icons.notifications_active,
+        iconColor: AppTheme.errorColor,
+      ),
+    ];
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 1000
-            ? 5
+        final cardWidth = constraints.maxWidth > 1000
+            ? (constraints.maxWidth - 64) / 5
             : constraints.maxWidth > 700
-                ? 3
-                : 2;
+                ? (constraints.maxWidth - 32) / 3
+                : (constraints.maxWidth - 16) / 2;
 
-        return GridView.count(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.4,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            StatCard(
-              label: 'Passages Today',
-              value: summary.totalPassagesToday.toString(),
-              icon: Icons.directions_car,
-              iconColor: Colors.blue,
-              onTap: () => context.go(RoutePaths.passages),
-            ),
-            StatCard(
-              label: 'Speeding',
-              value: summary.speedingViolationsToday.toString(),
-              icon: Icons.speed,
-              iconColor: AppTheme.errorColor,
-              onTap: () => context.go(RoutePaths.violations),
-            ),
-            StatCard(
-              label: 'Overstay',
-              value: summary.overstayViolationsToday.toString(),
-              icon: Icons.timer_off,
-              iconColor: AppTheme.warningColor,
-              onTap: () => context.go(RoutePaths.violations),
-            ),
-            StatCard(
-              label: 'Unmatched',
-              value: summary.unmatchedCount.toString(),
-              icon: Icons.help_outline,
-              iconColor: Colors.orange,
-              onTap: () => context.go(RoutePaths.unmatched),
-            ),
-            StatCard(
-              label: 'Active Alerts',
-              value: summary.activeAlertsCount.toString(),
-              icon: Icons.notifications_active,
-              iconColor: AppTheme.errorColor,
-            ),
-          ],
+        return Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: cards.map((card) {
+            return SizedBox(
+              width: cardWidth,
+              height: cardWidth / 1.4,
+              child: card,
+            );
+          }).toList(),
         );
       },
     );
